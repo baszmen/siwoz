@@ -1,0 +1,15 @@
+﻿<Application
+    x:Class="PatientsList.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PatientsList"
+    xmlns:localData="using:PatientsList.Data">
+
+    <Application.Resources>
+
+        <!-- Application-specific resources -->
+
+        <x:String x:Key="AppName">Listy oczekujących</x:String>
+
+    </Application.Resources>
+</Application>
