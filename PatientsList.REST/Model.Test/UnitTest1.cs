@@ -1,28 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using PatientsList.Model;
 using PatientsList.Model.Entities;
 using PatientsList.Model.Repository;
 
-namespace PatientsList.Model
+namespace Model.Test
 {
-    class Program
+    [TestClass]
+    public class UnitTest1
     {
-        static void Main(string[] args)
+        [TestMethod]
+        public void TestMethod1()
         {
             using (var uow = new UnitOfWork())
             {
                 var doctorRepository = new Repository<Doctor>(uow);
                 doctorRepository.Add(new Doctor
                 {
-                    Name = "Test",
-                    Surname = "Test2"
+                    Name = "Test",  
+                    Surname = "Test2",
+                    PatientsList = new List<Patient>(),
+                    Id = 1
                 });
                 uow.Commit();
 
                 var result = doctorRepository.Query().Count();
+                Assert.IsTrue(result > 0);
             }
         }
     }

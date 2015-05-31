@@ -1,72 +1,50 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using FluentNHibernate.Cfg;
+using FluentNHibernate.Cfg.Db;
+using NHibernate;
+using NHibernate.Cfg;
+using NHibernate.Driver;
+using NHibernate.Tool.hbm2ddl;
+using PatientsList.Model.Entities;
 
 namespace PatientsList.Model
 {
-    public interface INHibernate : IDisposable
+    public static class NHibernateInMemory
     {
-        ISession OpenSession();
-    }
-
-    public abstract class NHibernateInMemory : INHibernate
-    {
-        protected ISession Session { get; set; }
-
-        public abstract ISession OpenSession();
-
-        protected void BuildSchema(Configuration config)
-        {
-            var export = new SchemaExport(config);
-            export.Execute(true, true, false);
-        }
-
-        protected void BuildSchema(Configuration config, IDbConnection connection)
-        {
-            var export = new SchemaExport(config);
-            export.Execute(true, true, false, connection, null);
-        }
-
-        public void Dispose()
-        {
-            Session.Dispose();
-        }
-    }
-
-    public class NHibernateInMemory : NHibernateInMemory
-    {
+        private static Configuration _configuration;
         private static ISessionFactory _sessionFactory;
-        protected static ISessionFactory SessionFactory
+        public static ISessionFactory SessionFactory
         {
             get
             {
                 if (_sessionFactory == null)
                     Initialize();
+                return _sessionFactory;
             }
         }
-        protected static readonly object Locker = new object();
 
-        protected static Configuration Configuration;
-
-        public override ISession OpenSession()
+        public static ISession OpenSession()
         {
-            return SessionFactory.OpenSession();
+            var session =  SessionFactory.OpenSession();
+            new SchemaExport(_configuration).Execute(false, true, false, session.Connection, null);
+            return session;
         }
 
-        protected new void BuildSchema(Configuration config)
+        public static void Initialize()
         {
-            var export = new SchemaUpdate(config);
-            export.Execute(false, true);
-        }
-
-        protected void Initialize()
-        {
-            return return Fluently.Configure()
-                    .Database(SQLiteConfiguration.Standard.InMemory().ShowSql())
-                    .Mappings(m => m.FluentMappings.AddFromAssemblyOf<NHibernateInMemoryCommonSession>())
-                    .ExposeConfiguration(cfg => configuration = cfg)
+            _sessionFactory = Fluently.Configure()
+                    .Database(SQLiteConfiguration.Standard.InMemory().ShowSql)
+                    .Mappings(x => x.FluentMappings.AddFromAssemblyOf<Doctor>())
+                    .ExposeConfiguration(config =>
+                    {
+                        _configuration = config;
+                    })
                     .BuildSessionFactory();
         }
     }
