@@ -18,19 +18,19 @@ namespace PatientsList.DataModel
                 new Patient
                 {
                     Name = "Anna Zawodna",
-                    CheckTime = DateTime.Now
+                    CheckTime = DateTime.Now + TimeSpan.FromMinutes(1)
                 },
 
                 new Patient
                 {
                     Name = "Anna Zdrowa",
-                    CheckTime = DateTime.Now
+                    CheckTime = DateTime.Now + TimeSpan.FromMinutes(20)
                 },
 
                 new Patient
                 {
                     Name = "Henryka Prostonos",
-                    CheckTime = DateTime.Now
+                    CheckTime = DateTime.Now + TimeSpan.FromMinutes(30)
                 }
             };
             _doctors = new ObservableCollection<Doctor>

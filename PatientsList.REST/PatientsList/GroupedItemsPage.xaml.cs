@@ -32,7 +32,7 @@ namespace PatientsList
         /// </summary>
         public NavigationHelper NavigationHelper
         {
-            get { return this.navigationHelper; }
+            get { return navigationHelper; }
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace PatientsList
         /// </summary>
         public ObservableDictionary DefaultViewModel
         {
-            get { return this.defaultViewModel; }
+            get { return defaultViewModel; }
         }
 
         public GroupedItemsPage()
@@ -59,7 +59,6 @@ namespace PatientsList
         {
             // Determine what group the Button instance represents
             var group = (sender as FrameworkElement).DataContext;
-
             Frame.Navigate(typeof(GroupDetailPage), ((Doctor)group).Id);
         }
 

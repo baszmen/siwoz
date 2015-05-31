@@ -60,8 +60,16 @@ namespace PatientsList.DataModel
             set
             {
                 _patientsList = value;
+                foreach (Patient t in _patientsList)
+                    t.TimesUp += OnTimesUp;
                 OnPropertyChanged("PatientsList");
             }
+        }
+
+        private void OnTimesUp(object sender, Patient patient)
+        {
+            PatientsList.Remove(patient);
+            OnPropertyChanged("PatientsList");
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
