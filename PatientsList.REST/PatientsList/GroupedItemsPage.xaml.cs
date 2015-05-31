@@ -49,9 +49,9 @@ namespace PatientsList
             navigationHelper = new NavigationHelper(this);
             navigationHelper.LoadState += navigationHelper_LoadState;
         }
-        private void navigationHelper_LoadState(object sender, LoadStateEventArgs e)
+        private async void navigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
-            var doctors = DoctorsDataSource.GetDoctors();
+            var doctors = await DoctorsDataSource.GetDoctors();
             DefaultViewModel["Groups"] = doctors;
         }
 

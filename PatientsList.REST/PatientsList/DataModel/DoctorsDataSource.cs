@@ -1,9 +1,14 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace PatientsList.DataModel
 {
@@ -11,62 +16,22 @@ namespace PatientsList.DataModel
     {
         private static ObservableCollection<Doctor> _doctors;
 
-        static DoctorsDataSource()
-        {
-            var patients = new ObservableCollection<Patient>
-            {
-                new Patient
-                {
-                    Name = "Anna Zawodna",
-                    CheckTime = DateTime.Now + TimeSpan.FromMinutes(1)
-                },
-
-                new Patient
-                {
-                    Name = "Anna Zdrowa",
-                    CheckTime = DateTime.Now + TimeSpan.FromMinutes(20)
-                },
-
-                new Patient
-                {
-                    Name = "Henryka Prostonos",
-                    CheckTime = DateTime.Now + TimeSpan.FromMinutes(30)
-                }
-            };
-            _doctors = new ObservableCollection<Doctor>
-            {
-                new Doctor
-                {
-                    Name = "Andrzej",
-                    PatientsList = patients,
-                    Surname = "Góralczyk",
-                    Titles = "dr hab."
-                },
-                new Doctor
-                {
-                    Name = "Paweł",
-                    PatientsList = patients,
-                    Surname = "Niskowłos",
-                    Titles = "prof. dr hab."
-                },
-                new Doctor
-                {
-                    Name = "Hieronim",
-                    PatientsList = patients,
-                    Surname = "Anonim",
-                    Titles = "prof. zw. dr hab"
-                }
-            };
-        }
-
-        public static ObservableCollection<Doctor> GetDoctors()
-        {
-            return _doctors;          
-        }
-
         public static Doctor GetDoctor(int id)
         {
             return _doctors.FirstOrDefault(x => x.Id == id);
+        }
+
+        public async static Task<ObservableCollection<Doctor>> GetDoctors()
+        {
+            var client = new HttpClient { BaseAddress = new Uri("http://localhost:59901/") };
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
+            var responseMsg = client.GetAsync("api/Doctors");
+            var resp = responseMsg.Result;
+            if (!resp.IsSuccessStatusCode) _doctors = new ObservableCollection<Doctor>();
+            var jsonText = await resp.Content.ReadAsStringAsync();
+            _doctors = JsonConvert.DeserializeObject<ObservableCollection<Doctor>>(jsonText);
+
+            return _doctors;
         }
     }
 }

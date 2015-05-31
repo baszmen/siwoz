@@ -11,6 +11,7 @@ namespace PatientsList.Model.Entities
         public virtual string Name { get; set; }
         public virtual string Surname { get; set; }
         public virtual IList<Patient> PatientsList { get; set; }
+        public virtual string Titles { get; set; }
 
         public Doctor()
         {
@@ -24,6 +25,7 @@ namespace PatientsList.Model.Entities
         {
             Map(x => x.Name);
             Map(x => x.Surname);
+            Map(x => x.Titles);
             HasMany(x => x.PatientsList);
         }
     }
