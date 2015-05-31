@@ -15,7 +15,7 @@ using PatientsList.Model.Entities;
 
 namespace PatientsList.Model
 {
-    public static class NHibernateInMemory
+    public static class NHibernateInMemoryCleanup
     {
         private static Configuration _configuration;
         private static ISessionFactory _sessionFactory;
