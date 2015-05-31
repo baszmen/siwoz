@@ -9,10 +9,10 @@ using PatientsList.Model.Repository;
 namespace Model.Test
 {
     [TestClass]
-    public class UnitTest1
+    public class ModelTest
     {
         [TestMethod]
-        public void TestMethod1()
+        public void NHibernateTest()
         {
             using (var uow = new UnitOfWork())
             {

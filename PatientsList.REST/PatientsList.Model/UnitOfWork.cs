@@ -34,7 +34,7 @@ namespace PatientsList.Model
 
         public void Start()
         {
-            session = NHibernateInMemory.OpenSession();
+            session = NHibernateInMemoryCleanup.OpenSession();
             session.FlushMode = FlushMode.Commit;
             transaction = session.BeginTransaction();
         }
