@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
@@ -16,6 +17,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using PatientsList.DataModel;
 
 // The Grid App template is documented at http://go.microsoft.com/fwlink/?LinkId=234226
 
@@ -26,6 +28,8 @@ namespace PatientsList
     /// </summary>
     sealed partial class App : Application
     {
+        private const int TIME_INTERVAL_IN_MILLISECONDS = 2000;
+        private Timer _timer;
         /// <summary>
         /// Initializes the singleton Application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -95,6 +99,18 @@ namespace PatientsList
             }
             // Ensure the current window is active
             Window.Current.Activate();
+
+            if (_timer != null)
+            {
+                _timer.Dispose();
+                _timer = null;
+            }
+            _timer = new Timer(AsynchronousRESTActualization, null, TIME_INTERVAL_IN_MILLISECONDS, Timeout.Infinite);
+        }
+
+        private async void AsynchronousRESTActualization(object state)
+        {
+            await DoctorsDataSource.ActualizeDoctors();
         }
 
         /// <summary>

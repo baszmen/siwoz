@@ -21,6 +21,51 @@ namespace PatientsList.DataModel
             return _doctors.FirstOrDefault(x => x.Id == id);
         }
 
+        public async static Task<bool> ActualizeDoctors()
+        {
+            try
+            {
+                var _docs = new List<Doctor>();
+                var client = new HttpClient {BaseAddress = new Uri("http://localhost:59901/")};
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+                var responseMsg = client.GetAsync("api/Doctors");
+                var resp = responseMsg.Result;
+                if (!resp.IsSuccessStatusCode) _docs = new List<Doctor>();
+                var jsonText = await resp.Content.ReadAsStringAsync();
+                _docs = JsonConvert.DeserializeObject<List<Doctor>>(jsonText);
+
+                foreach (var d in _docs)
+                {
+                    var doc = _doctors.FirstOrDefault(x => x.Id == d.Id);
+                    if (doc == null)
+                    {
+                        _doctors.Add(d);
+                        continue;
+                        ;
+                    }
+                    doc.Name = d.Name;
+                    doc.Surname = d.Surname;
+                    doc.Titles = d.Titles;
+                    foreach (var p in d.PatientsList)
+                    {
+                        var pat = doc.PatientsList.FirstOrDefault(x => x.Id == p.Id);
+                        if (pat == null)
+                            doc.PatientsList.Add(p);
+                        else
+                        {
+                            pat.CheckTime = p.CheckTime;
+                            pat.Name = p.Name;
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return true;
+        }
+
         public async static Task<ObservableCollection<Doctor>> GetDoctors()
         {
             var client = new HttpClient { BaseAddress = new Uri("http://localhost:59901/") };
