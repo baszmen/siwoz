@@ -21,7 +21,7 @@ namespace PatientsList.DataModel
 
         public string Name
         {
-            get { return _name;}
+            get { return _name; }
             set
             {
                 _name = value;
@@ -31,7 +31,7 @@ namespace PatientsList.DataModel
 
         public string Titles
         {
-            get { return _titles;}
+            get { return _titles; }
             set
             {
                 _titles = value;
@@ -62,8 +62,9 @@ namespace PatientsList.DataModel
             set
             {
                 _patientsList = value;
-                foreach (Patient t in _patientsList)
-                    t.TimesUp += OnTimesUp;
+                if (value != null)
+                    foreach (Patient t in _patientsList)
+                        t.TimesUp += OnTimesUp;
                 OnPropertyChanged("PatientsList");
             }
         }
