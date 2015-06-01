@@ -1,32 +1,47 @@
-﻿<!DOCTYPE html>
-<html>
+﻿@{
+    var currentAction = Url.Action(null);
+}
+
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width" />
     @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/themes/base/css")
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
     <header>
         <div class="content-wrapper">
             <div class="float-left">
-                <p class="site-title">
-                    <a href="~/">ASP.NET Web API</a></p>
-            </div>
-            <div class="float-right">
-                <nav>
-                    <ul id="menu">
-                        <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, null)</li>
-                        <li>@Html.ActionLink("API", "Index", "Help", new { area = "" }, null)</li>
-                    </ul>
-                </nav>
+                <a href="@Url.Action("Doctors", "Home")" class="site-title">
+                    <span>Hoży</span><br />
+                    <span>doktorzy</span>
+                </a>
             </div>
         </div>
     </header>
-    @RenderBody()
+    <div id="body">
+        @RenderSection("featured", required: false)
+        <section class="content-wrapper main-content clear-fix">
+            @RenderBody()
+        </section>
+    </div>
+    <footer>
+        <div class="content-wrapper">
+            <div class="float-left">
+                <p>&copy; @DateTime.Now.Year - Doktorzy</p>
+            </div>
+        </div>
+    </footer>
 
-    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/aibarber")
     @RenderSection("scripts", required: false)
+    <script type="text/javascript">
+        @RenderSection("scriptsText", required: false)
+    </script>
 </body>
 </html>

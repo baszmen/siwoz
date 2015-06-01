@@ -64,9 +64,11 @@ namespace PatientsList.Model
 
         public static void InitializeSessionFactory()
         {
-            m_sessionFactory = Fluently
-                .Configure()
-                .Database(SQLiteConfiguration.Standard.InMemory().ShowSql())
+            string connectionString = @"Data Source=|DataDirectory|\TranslatorDB.sl3";
+            
+            m_sessionFactory = Fluently.Configure()
+                .Database(SQLiteConfiguration.Standard.ConnectionString(connectionString))
+                //.Database(SQLiteConfiguration.Standard.InMemory().ShowSql())
                 .Mappings(m => m.FluentMappings.AddFromAssembly(Assembly.GetExecutingAssembly()))
                 .ExposeConfiguration(x => m_config = x)
                 .BuildSessionFactory();

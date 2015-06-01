@@ -1,0 +1,109 @@
+﻿.user-image, .user-image-small {
+    background-repeat: no-repeat;
+    float: left;
+}
+
+.user-img, .user-image, .user-image-small {
+    width: 80px;
+    height: 80px;
+    min-width: 80px;
+    min-height: 80px;
+}
+
+.ui-tooltip {
+    max-width: 80px;
+    max-height: 80px;
+}
+
+.hidden {
+    display: none;
+}
+
+/* TABELKI */
+thead {
+    border-bottom: 1px solid #c4c4c4;
+    margin-bottom: 5px;
+}
+
+tr:nth-child(even) {
+    background: #f1f1f1;
+}
+
+tr:nth-child(odd) {
+    background: #FFF;
+}
+
+#visitsList td {
+    padding: 10px 5px;
+}
+
+/* TABELKI END */
+
+/* DUTY ROTA */
+.dutyRota.form, .leftForm {
+    width: 55%;
+    border-right: solid 2px #c8c8c8;
+    float: left;
+}
+
+.dutyRota.caption, .rightForm {
+    padding-left: 30px;
+    float: left;
+}
+
+table.dutyRota {
+    margin-bottom: 10px;
+}
+
+.dutyRota input[type=checkbox] {
+    display: none;
+}
+
+.dutyRota input[type=checkbox]:checked ~ label {
+	background: #393;
+}
+
+.checkBoxCell label{
+	width: 30px;
+	height: 13px;
+	background: #999;
+	position: relative;
+	border-radius: 4px;
+    padding: 4px;
+}
+
+.dutyRota label div {
+   background-color: orange;
+   height: 13px;
+   border-radius: 2px;
+}
+
+.checkBoxCell.disabled label {
+    background: #CCC;
+}
+
+table.dutyRota td.checkBoxCell.assigned label {
+    background: #33C;
+}
+
+.disabled div {
+    display: none;
+}
+
+.checkBoxCell.disabled div {
+    display: block;
+    background-color: #CD950C;
+}
+
+.red {
+    color: red;
+}
+
+input[disabled] {
+    color: grey;
+}
+
+.primary_color {
+    color: orange;
+}
+/* DUTY ROTA END */
