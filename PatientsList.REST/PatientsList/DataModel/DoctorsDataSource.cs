@@ -68,6 +68,7 @@ namespace PatientsList.DataModel
 
         public async static Task<ObservableCollection<Doctor>> GetDoctors()
         {
+            if (_doctors != null) return _doctors;
             var client = new HttpClient { BaseAddress = new Uri("http://localhost:59901/") };
             client.DefaultRequestHeaders.Add("Accept", "application/json");
             var responseMsg = client.GetAsync("api/Doctors");

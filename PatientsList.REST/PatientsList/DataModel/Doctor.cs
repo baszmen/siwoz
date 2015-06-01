@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
 using PatientsList.Annotations;
 
 namespace PatientsList.DataModel
@@ -15,7 +17,7 @@ namespace PatientsList.DataModel
         private string _titles;
         private string _name;
         private string _surname;
-        private IList<Patient> _patientsList;
+        private ObservableCollection<Patient> _patientsList;
 
         public string Name
         {
@@ -54,7 +56,7 @@ namespace PatientsList.DataModel
                 OnPropertyChanged("Surname");
             }
         }
-        public IList<Patient> PatientsList
+        public ObservableCollection<Patient> PatientsList
         {
             get { return _patientsList; }
             set
@@ -68,6 +70,7 @@ namespace PatientsList.DataModel
 
         private void OnTimesUp(object sender, Patient patient)
         {
+            patient.TimesUp -= OnTimesUp;
             PatientsList.Remove(patient);
             OnPropertyChanged("PatientsList");
         }

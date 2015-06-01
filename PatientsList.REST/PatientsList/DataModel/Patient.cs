@@ -26,7 +26,14 @@ namespace PatientsList.DataModel
             Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                 () =>
                 {
-                    OnPropertyChanged("LeftTime");
+                    var ts = CheckTime.Subtract(DateTime.Now);
+                    if (ts.Ticks < 0)
+                    {
+                        if (TimesUp != null)
+                            TimesUp(this, this);
+                        LeftTime = TimeSpan.Zero;
+                    }
+                    else LeftTime = ts;
 
                 });
             _timer.Change(TIME_INTERVAL_IN_MILLISECONDS, Timeout.Infinite);
@@ -35,6 +42,7 @@ namespace PatientsList.DataModel
         private int _id;
         private string _name;
         private DateTime _checkTime;
+        private TimeSpan _leftTime;
         public int Id
         {
             get { return _id; }
@@ -65,16 +73,11 @@ namespace PatientsList.DataModel
 
         public TimeSpan LeftTime
         {
-            get
+            get { return _leftTime; }
+            set
             {
-                var ts = CheckTime.Subtract(DateTime.Now);
-                if (ts.Ticks < 0)
-                {
-                    if (TimesUp != null)
-                        TimesUp(this, this);
-                    return TimeSpan.Zero;
-                }
-                else return ts;
+                _leftTime = value;
+                OnPropertyChanged("LeftTime");
             }
         }
 
