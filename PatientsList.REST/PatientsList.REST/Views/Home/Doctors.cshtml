@@ -1,0 +1,18 @@
+﻿<div id="body">
+    <section class="content-wrapper main-content clear-fix">
+        <h3>W naszej klinice leczą następujący doktorzy:</h3>
+        <ol class="round">
+            @foreach (Doctor doctor in Model)
+            {
+                <li>
+                    <div>Imię: @doctor.Name</div>
+                    <div>Nazwisko: @doctor.Surname</div>
+                    <div>@Html.ActionLink("Usuń użytkownika", "RemoveDoctor", new { userId = doctor.Id, returnUrl = Url.Action(null) }, new { @class = "post-link-confirm", @data_confirm_text = "Czy na pewno chcesz usunąć doktora?" })</div>
+                </li>
+            }
+        </ol>
+        <div>
+            @Html.ActionLink("Dodaj doktura", "AddDoctor", new { returnUrl = Url.Action(null) }, new { @class = "post-link-confirm", @data_confirm_text = "Czy na pewno chcesz dodać doktora?" })
+        </div>
+    </section>
+</div>

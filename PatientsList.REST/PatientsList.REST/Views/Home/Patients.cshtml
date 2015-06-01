@@ -1,0 +1,15 @@
+﻿<div id="body">
+    <section class="content-wrapper main-content clear-fix">
+        <h3>Zaplanowane wizyty:</h3>
+        <ol class="round">
+            @foreach (Patient patient in Model)
+            {
+                <li>
+                    <div>Imię: @Html.DisplayFor(patientItem => patient.Name)</div>
+                    <div>Nazwisko: @Html.DisplayFor(patientItem => patient.CheckTime)</div>
+                    <div>@Html.ActionLink("Usuń wizytę", "RemovePatient", new { patientId = patient.Id, returnUrl = Url.Action(null) }, new { @class = "post-link-confirm", @data_confirm_text = "Czy na pewno chcesz usunąć wizytę?" })</div>
+                </li>
+            }
+        </ol>
+    </section>
+</div>
