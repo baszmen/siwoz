@@ -17,23 +17,72 @@ namespace PatientsList.REST.Controllers
         // GET api/doctors
         public List<Doctor> Get()
         {
-            var patients = new List<Patient>
+            var patients_1 = new List<Patient>
             {
                 new Patient
                 {
-                    Name = "Anna Zawodna",
-                    CheckTime = DateTime.Now + TimeSpan.FromMinutes(1)
+                    Id = 1,
+                    Name = "Anna Zawodna 1",
+                    CheckTime = DateTime.Now + TimeSpan.FromSeconds(10)
                 },
 
                 new Patient
                 {
-                    Name = "Anna Zdrowa",
+                    Id = 2,
+                    Name = "Anna Zdrowa 1",
                     CheckTime = DateTime.Now + TimeSpan.FromMinutes(20)
                 },
 
                 new Patient
                 {
-                    Name = "Henryka Prostonos",
+                    Id = 3,
+                    Name = "Henryka Prostonos 1",
+                    CheckTime = DateTime.Now + TimeSpan.FromMinutes(30)
+                }
+            };
+            var patients_2 = new List<Patient>
+            {
+                new Patient
+                {
+                    Id = 4,
+                    Name = "Anna Zawodna 2",
+                    CheckTime = DateTime.Now + TimeSpan.FromSeconds(10)
+                },
+
+                new Patient
+                {
+                    Id = 5,
+                    Name = "Anna Zdrowa 2",
+                    CheckTime = DateTime.Now + TimeSpan.FromMinutes(20)
+                },
+
+                new Patient
+                {
+                    Id = 6,
+                    Name = "Henryka Prostonos 2",
+                    CheckTime = DateTime.Now + TimeSpan.FromMinutes(30)
+                }
+            };
+            var patients_3 = new List<Patient>
+            {
+                new Patient
+                {
+                    Id = 7,
+                    Name = "Anna Zawodna 3",
+                    CheckTime = DateTime.Now + TimeSpan.FromSeconds(10)
+                },
+
+                new Patient
+                {
+                    Id = 8,
+                    Name = "Anna Zdrowa 3",
+                    CheckTime = DateTime.Now + TimeSpan.FromMinutes(20)
+                },
+
+                new Patient
+                {
+                    Id = 9,
+                    Name = "Henryka Prostonos 3",
                     CheckTime = DateTime.Now + TimeSpan.FromMinutes(30)
                 }
             };
@@ -41,22 +90,25 @@ namespace PatientsList.REST.Controllers
             {
                 new Doctor
                 {
+                    Id = 1,
                     Name = "Andrzej",
-                    PatientsList = patients,
+                    PatientsList = patients_1,
                     Surname = "Góralczyk",
                     Titles = "dr hab."
                 },
                 new Doctor
                 {
+                    Id = 2,
                     Name = "Paweł",
-                    PatientsList = patients,
+                    PatientsList = patients_2,
                     Surname = "Niskowłos",
                     Titles = "prof. dr hab."
                 },
                 new Doctor
                 {
+                    Id = 3,
                     Name = "Hieronim",
-                    PatientsList = patients,
+                    PatientsList = patients_3,
                     Surname = "Anonim",
                     Titles = "prof. zw. dr hab"
                 }

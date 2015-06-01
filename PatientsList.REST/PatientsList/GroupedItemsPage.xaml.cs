@@ -58,8 +58,8 @@ namespace PatientsList
         void Header_Click(object sender, RoutedEventArgs e)
         {
             // Determine what group the Button instance represents
-            var group = (sender as FrameworkElement).DataContext;
-            Frame.Navigate(typeof(GroupDetailPage), ((Doctor)group).Id);
+            var group = ((Doctor)(sender as FrameworkElement).DataContext);
+            Frame.Navigate(typeof(GroupDetailPage), group.Id);
         }
 
         #region NavigationHelper registration
