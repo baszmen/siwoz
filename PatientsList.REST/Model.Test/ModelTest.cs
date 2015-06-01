@@ -14,12 +14,32 @@ namespace Model.Test
         [TestMethod]
         public void NHibernateTest()
         {
-            using (var uow = new UnitOfWork())
+            using (var uow = new UnitOfWork(false))
             {
                 var doctorRepository = new Repository<Doctor>(uow);
                 doctorRepository.Add(new Doctor
                 {
                     Name = "Test",  
+                    Surname = "Test2",
+                    PatientsList = new List<Patient>(),
+                    Id = 1
+                });
+                uow.Commit();
+
+                var result = doctorRepository.Query().Count();
+                Assert.IsTrue(result > 0);
+            }
+        }
+
+        [TestMethod]
+        public void NHibernateInMemoryTest()
+        {
+            using (var uow = new UnitOfWork(true))
+            {
+                var doctorRepository = new Repository<Doctor>(uow);
+                doctorRepository.Add(new Doctor
+                {
+                    Name = "Test",
                     Surname = "Test2",
                     PatientsList = new List<Patient>(),
                     Id = 1

@@ -23,20 +23,30 @@ namespace PatientsList.Model
 
         public UnitOfWork()
         {
-            Start();
+            Start(true);
         }
 
-        public UnitOfWork(bool start = false)
+        public UnitOfWork(bool inMemory)
+        {
+            Start(inMemory);
+        }
+
+        public UnitOfWork(bool start = false, bool inMemory = false)
         {
             if (start)
-                Start();
+                Start(inMemory);
+        }
+
+        public void Start(bool inMemory = false)
+        {
+            session = inMemory ? NHibernateInMemory.OpenSession() : NHibernateInMemoryCleanup.OpenSession();
+            session.FlushMode = FlushMode.Commit;
+            transaction = session.BeginTransaction();
         }
 
         public void Start()
         {
-            session = NHibernateInMemoryCleanup.OpenSession();
-            session.FlushMode = FlushMode.Commit;
-            transaction = session.BeginTransaction();
+            throw new NotImplementedException();
         }
 
         public void Flush()

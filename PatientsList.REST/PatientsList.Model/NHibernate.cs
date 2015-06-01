@@ -48,4 +48,32 @@ namespace PatientsList.Model
                     .BuildSessionFactory();
         }
     }
+
+    public static class NHibernateInMemory
+    {
+        private static ISessionFactory m_sessionFactory { get; set; }
+        private static IDbConnection m_connection;
+        private static Configuration m_config { get; set; }
+
+        public static ISession OpenSession()
+        {
+            if (m_sessionFactory == null)
+                InitializeSessionFactory();
+            return m_connection == null ? m_sessionFactory.OpenSession() : m_sessionFactory.OpenSession(m_connection);
+        }
+
+        public static void InitializeSessionFactory()
+        {
+            m_sessionFactory = Fluently
+                .Configure()
+                .Database(SQLiteConfiguration.Standard.InMemory().ShowSql())
+                .Mappings(m => m.FluentMappings.AddFromAssembly(Assembly.GetExecutingAssembly()))
+                .ExposeConfiguration(x => m_config = x)
+                .BuildSessionFactory();
+
+            m_connection = m_sessionFactory.OpenSession().Connection;
+            var export = new SchemaExport(m_config);
+            export.Execute(true, true, false, m_connection, null);
+        }
+    }
 }
