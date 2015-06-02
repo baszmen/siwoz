@@ -1,16 +1,53 @@
 ﻿<div id="body">
-    <section class="content-wrapper main-content clear-fix">
+    <section class="content-wrapper clear-fix">
         <h3>W naszej klinice leczą następujący doktorzy:</h3>
-        <ol class="round">
-            @foreach (Doctor doctor in Model)
-            {
-                <li>
-                    <div>Imię: @doctor.Name</div>
-                    <div>Nazwisko: @doctor.Surname</div>
-                    <div>@Html.ActionLink("Usuń użytkownika", "RemoveDoctor", new { userId = doctor.Id, returnUrl = Url.Action(null) }, new { @class = "post-link-confirm", @data_confirm_text = "Czy na pewno chcesz usunąć doktora?" })</div>
-                </li>
-            }
-        </ol>
+        <div id="usersList">
+            <table>
+                <thead>
+                    <tr>
+                        <th>
+                            Zdjęcie
+                        </th>
+                        <th>
+                            Tytuł
+                        </th>
+                        <th>
+                            Imię
+                        </th>
+                        <th>
+                            Nazwisko
+                        </th>
+                        <th>Usuń</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <img style="width: 100px; height: auto" src='@Url.Action("UserImageSmall", "Home", new { id = item.Id })' />
+                            </td>
+                            <td>
+                                @item.Name
+                            </td>
+                            <td>
+                                @item.Surname
+                            </td>
+                            <td>
+                                @item.Titles
+                            </td>
+                            <td>
+                                @Html.ActionLink("Usuń użytkownika", "RemoveDoctor", new { userId = item.Id, returnUrl = Url.Action(null) }, new { @class = "post-link-confirm", @data_confirm_text = "Czy na pewno chcesz usunąć doktora?" })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @*<div class="pagedList" data-aib-target="#usersList">
+                @Html.PagedListPager(Model, page => Url.Action(null, new { page }),
+                    PagedListRenderOptions.ClassicPlusFirstAndLast)
+            </div>*@
+        </div>
         <div>
             @Html.ActionLink("Dodaj doktura", "AddDoctor", new { returnUrl = Url.Action(null) }, new { @class = "post-link-confirm", @data_confirm_text = "Czy na pewno chcesz dodać doktora?" })
         </div>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Helpers;
 using System.Web.Mvc;
 using PatientsList.Model;
 using PatientsList.Model.Entities;
@@ -29,6 +30,29 @@ namespace PatientsList.REST.Controllers
 
         public ActionResult Patients(int id)
         {
+            // TODO DEBUG
+            return View(new List<Patient>
+            {
+                new Patient
+                {
+                    Id = 1,
+                    Name = "Anna Kowalska",
+                    CheckTime = new DateTime()
+                },
+                new Patient
+                {
+                    Id = 2,
+                    Name = "Jacek Gmoch",
+                    CheckTime = new DateTime()
+                },
+                new Patient
+                {
+                    Id = 3,
+                    Name = "Krzysztof Penderecki",
+                    CheckTime = new DateTime()
+                }
+            });
+
             List<Patient> patients;
             using (var uow = new UnitOfWork())
             {
@@ -65,7 +89,7 @@ namespace PatientsList.REST.Controllers
                 {
                     Name = "Mateusz",
                     Surname = "Dembski",
-                    Titles = "dr hab. inż. cz. rzecz. PAN"
+                    Titles = "inż."
                 });
                 uow.Commit();
             }
@@ -76,6 +100,14 @@ namespace PatientsList.REST.Controllers
         {
             TempData["msg"] = removePatient(patientId) ? ManageMessageId.UserRemoved : ManageMessageId.UserNotRemoved;
             return RedirectToLocal(returnUrl);
+        }
+
+        public FileResult UserImageSmall(int id)
+        {
+            if (id % 2 == 0)
+                return File(Server.MapPath("/Images/person.jpg"), "image/jpeg");
+            var img = File(Server.MapPath("/Images/doctor.jpeg"), "image/jpeg");
+            return img;
         }
 
         private bool removeUser(int doctorId)
