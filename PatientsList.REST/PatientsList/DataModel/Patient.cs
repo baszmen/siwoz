@@ -26,23 +26,51 @@ namespace PatientsList.DataModel
             Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                 () =>
                 {
-                    var ts = CheckTime.Subtract(DateTime.Now);
-                    if (ts.Ticks < 0)
+                    if (!Inside)
                     {
-                        if (TimesUp != null)
-                            TimesUp(this, this);
-                        LeftTime = TimeSpan.Zero;
+                        var ts = CheckTime.Subtract(DateTime.Now);
+                        if (ts.Ticks <= 0)
+                        {
+                            LeftTime = TimeSpan.Zero;
+                            Inside = true;
+                            ImagePath = "Assets/doctor.jpeg";
+                            LeftTime = VisitTime;
+                        }
+                        else LeftTime = ts;
                     }
-                    else LeftTime = ts;
 
+                    if (Inside)
+                    {
+                        LeftTime = LeftTime.Subtract(TimeSpan.FromMilliseconds(TIME_INTERVAL_IN_MILLISECONDS));
+                        if (LeftTime.Ticks <= 0)
+                        {
+                            if (TimesUp != null)
+                                TimesUp(this, this);
+                        }
+                    }
                 });
             _timer.Change(TIME_INTERVAL_IN_MILLISECONDS, Timeout.Infinite);
         }
 
         private int _id;
         private string _name;
+        private bool _inside = false;
+        private string _patientInfo = "Do wizyty pozostało:";
         private DateTime _checkTime;
         private TimeSpan _leftTime;
+        private TimeSpan _visitTime = TimeSpan.FromSeconds(10);
+        private string _imagePath = "Assets/person.jpg";
+
+        public bool Inside
+        {
+            get { return _inside; }
+            set
+            {
+                _inside = value;
+                PatientInfo = "Trwa wizyta. Pozostało:";
+                OnPropertyChanged("Inside");
+            }
+        }
         public int Id
         {
             get { return _id; }
@@ -70,7 +98,6 @@ namespace PatientsList.DataModel
                 OnPropertyChanged("CheckTime");
             }
         }
-
         public TimeSpan LeftTime
         {
             get { return _leftTime; }
@@ -78,6 +105,33 @@ namespace PatientsList.DataModel
             {
                 _leftTime = value;
                 OnPropertyChanged("LeftTime");
+            }
+        }
+        public TimeSpan VisitTime
+        {
+            get { return _visitTime; }
+            set
+            {
+                _visitTime = value;
+                OnPropertyChanged("VisitTime");
+            }
+        }
+        public string ImagePath
+        {
+            get { return _imagePath; }
+            set
+            {
+                _imagePath = value;
+                OnPropertyChanged("ImagePath");
+            }
+        }
+        public string PatientInfo
+        {
+            get { return _patientInfo; }
+            set
+            {
+                _patientInfo = value;
+                OnPropertyChanged("PatientInfo");
             }
         }
 
