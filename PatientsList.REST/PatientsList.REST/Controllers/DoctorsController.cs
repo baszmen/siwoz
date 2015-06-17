@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Web;
+using System.Web.Helpers;
 using System.Web.Mvc;
+using System.Web.Razor.Text;
 using System.Web.Routing;
 using PatientsList.Model;
 using PatientsList.Model.Entities;
@@ -13,6 +16,7 @@ namespace PatientsList.REST.Controllers
 {
     public class DoctorsController : Controller
     {
+        private int LARGE_IMG_SIZE = 640;
         //
         // GET: /Doctors/
 
@@ -45,6 +49,31 @@ namespace PatientsList.REST.Controllers
         }
 
         //
+        // GET: /UserImageSmall/1
+        public FileResult GetImage(int id)
+        {
+            using (var uow = new UnitOfWork())
+            {
+                Doctor doctor = new Repository<Doctor>(uow).Get(id);
+                if (doctor != null)
+                {
+                    byte[] imageBytes = doctor.Photo;
+                    if (imageBytes != null)
+                    {
+                        WebImage image = new WebImage(imageBytes);
+                        if (image.Height > LARGE_IMG_SIZE || image.Width > LARGE_IMG_SIZE)
+                        {
+                            image = image.Resize(LARGE_IMG_SIZE, LARGE_IMG_SIZE);
+                        }
+                        image = image.Resize(200, 200, true);
+                        return File(image.GetBytes(), "image/" + image.ImageFormat);
+                    }
+                }
+            }
+            return null;
+        }
+
+        //
         // GET: /Doctors/Create
 
         public ActionResult Create()
@@ -52,16 +81,42 @@ namespace PatientsList.REST.Controllers
             return View();
         }
 
+
+        private Byte[] getPassedImage()
+        {
+            var image = WebImage.GetImageFromRequest();
+            Byte[] imageBytes = null;
+
+            if (image != null)
+            {
+                if (image.Height > LARGE_IMG_SIZE || image.Width > LARGE_IMG_SIZE)
+                {
+                    image = image.Resize(LARGE_IMG_SIZE, LARGE_IMG_SIZE);
+                }
+
+                imageBytes = image.GetBytes();
+            }
+            return imageBytes;
+        }
+
         //
         // POST: /Doctors/Create
 
         [HttpPost]
-        public ActionResult Create([Bind(Include = "FirstName, LastName, Titles, Photo")]Doctor doctor)
+        public ActionResult Create(FormCollection doctorFormCollection)
         {
+            var doctor = new Doctor
+            {
+                Name = doctorFormCollection.Get("Name"),
+                Surname = doctorFormCollection.Get("Surname"),
+                Titles = doctorFormCollection.Get("Titles"),
+                Photo = getPassedImage()
+            };
             try
             {
                 if (ModelState.IsValid)
                 {
+                    
                     using (var uow = new UnitOfWork())
                     {
                         var repository = new Repository<Doctor>(uow);

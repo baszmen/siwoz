@@ -7,7 +7,7 @@
 
 <div id="body">
     <section class="content-wrapper clear-fix">
-        <h3>Doktor @ViewBag.Doctor.Name @ViewBag.Doctor.Surame</h3>
+        <h3>Doktor @ViewBag.Doctor.Name @ViewBag.Doctor.Surname</h3>
 
         <h3>Zaplanowane wizyty:</h3>
         @*<ol class="round">
@@ -38,7 +38,7 @@
                     {
                         <tr>
                             <td>
-                                <img style="width: 100px; height: auto" src='@Url.Action("UserImageSmall", "Home", new { id = 20 })' />
+                                <img style="width: 100px; height: auto" src='@Url.Action("GetImage", "Doctors", new { id = item.Id })' />
                             </td>
                             <td>
                                 @item.Name
