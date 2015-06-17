@@ -13,6 +13,8 @@ namespace PatientsList.Model.Entities
         public virtual IList<Patient> PatientsList { get; set; }
         public virtual string Titles { get; set; }
 
+        public virtual byte[] Photo { get; set; }
+
         public Doctor()
         {
             PatientsList = new List<Patient>();
@@ -26,6 +28,7 @@ namespace PatientsList.Model.Entities
             Map(x => x.Name);
             Map(x => x.Surname);
             Map(x => x.Titles);
+            Map(x => x.Photo);
             HasMany(x => x.PatientsList);
         }
     }

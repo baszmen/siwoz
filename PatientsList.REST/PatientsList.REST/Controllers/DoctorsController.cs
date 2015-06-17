@@ -1,154 +1,135 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Data;
 using System.Linq;
 using System.Web;
-using System.Web.Http;
 using System.Web.Mvc;
+using System.Web.Routing;
 using PatientsList.Model;
 using PatientsList.Model.Entities;
 using PatientsList.Model.Repository;
-using Doctor = PatientsList.Model.Entities.Doctor;
 
 namespace PatientsList.REST.Controllers
 {
-    public class DoctorsController : ApiController
+    public class DoctorsController : Controller
     {
-        // GET api/doctors
-        public List<Doctor> Get()
+        //
+        // GET: /Doctors/
+
+        public ActionResult Index()
         {
-            var patients_1 = new List<Patient>
-            {
-                new Patient
-                {
-                    Id = 1,
-                    Name = "Anna Zawodna 1",
-                    CheckTime = DateTime.Now + TimeSpan.FromSeconds(10)
-                },
-
-                new Patient
-                {
-                    Id = 2,
-                    Name = "Anna Zdrowa 1",
-                    CheckTime = DateTime.Now + TimeSpan.FromMinutes(20)
-                },
-
-                new Patient
-                {
-                    Id = 3,
-                    Name = "Henryka Prostonos 1",
-                    CheckTime = DateTime.Now + TimeSpan.FromMinutes(30)
-                }
-            };
-            var patients_2 = new List<Patient>
-            {
-                new Patient
-                {
-                    Id = 4,
-                    Name = "Anna Zawodna 2",
-                    CheckTime = DateTime.Now + TimeSpan.FromSeconds(10)
-                },
-
-                new Patient
-                {
-                    Id = 5,
-                    Name = "Anna Zdrowa 2",
-                    CheckTime = DateTime.Now + TimeSpan.FromMinutes(20)
-                },
-
-                new Patient
-                {
-                    Id = 6,
-                    Name = "Henryka Prostonos 2",
-                    CheckTime = DateTime.Now + TimeSpan.FromMinutes(30)
-                }
-            };
-            var patients_3 = new List<Patient>
-            {
-                new Patient
-                {
-                    Id = 7,
-                    Name = "Anna Zawodna 3",
-                    CheckTime = DateTime.Now + TimeSpan.FromSeconds(10)
-                },
-
-                new Patient
-                {
-                    Id = 8,
-                    Name = "Anna Zdrowa 3",
-                    CheckTime = DateTime.Now + TimeSpan.FromMinutes(20)
-                },
-
-                new Patient
-                {
-                    Id = 9,
-                    Name = "Henryka Prostonos 3",
-                    CheckTime = DateTime.Now + TimeSpan.FromMinutes(30)
-                }
-            };
-            var docs = new List<Doctor>
-            {
-                new Doctor
-                {
-                    Id = 1,
-                    Name = "Andrzej",
-                    PatientsList = patients_1,
-                    Surname = "Góralczyk",
-                    Titles = "dr hab."
-                },
-                new Doctor
-                {
-                    Id = 2,
-                    Name = "Paweł",
-                    PatientsList = patients_2,
-                    Surname = "Niskowłos",
-                    Titles = "prof. dr hab."
-                },
-                new Doctor
-                {
-                    Id = 3,
-                    Name = "Hieronim",
-                    PatientsList = patients_3,
-                    Surname = "Anonim",
-                    Titles = "prof. zw. dr hab"
-                }
-            };
-
-            return docs;
-
+            List<Doctor> doctors;
             using (var uow = new UnitOfWork())
-                return new Repository<Doctor>(uow).Query().ToList();
+            {
+                var repo = new Repository<Doctor>(uow);
+                doctors = new List<Doctor>(repo.Query());
+            }
+            return View(doctors);
         }
 
-        // GET api/doctors/5
-        public Doctor Get(int id)
-        {
-            using (var uow = new UnitOfWork())
-                return new Repository<Doctor>(uow).Get(id);
-        }
+        //
+        // GET: /Doctors/Details/5
 
-        // POST api/doctors
-        public void Post([FromBody]Doctor value)
+        public ActionResult Details(int id)
         {
-            using (var uow = new UnitOfWork())
-                new Repository<Doctor>(uow).Add(value);
-        }
-
-        // PUT api/doctors/5
-        public void Put(int id, [FromBody]Doctor value)
-        {
-            using (var uow = new UnitOfWork())
-                new Repository<Doctor>(uow).AddOrUpdate(value);
-        }
-
-        // DELETE api/doctors/5
-        public void Delete(int id)
-        {
+            List<Patient> patients;
+            Doctor doctor;
             using (var uow = new UnitOfWork())
             {
-                var repository = new Repository<Doctor>(uow);
-                var entity = repository.Get(id);
-                repository.Delete(entity);
+                var doctorsRepo = new Repository<Doctor>(uow);
+                doctor = doctorsRepo.Get(id);
+                patients = new List<Patient>(doctor.PatientsList);
+            }
+            ViewBag.Doctor = doctor;
+            return View(patients);
+        }
+
+        //
+        // GET: /Doctors/Create
+
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        //
+        // POST: /Doctors/Create
+
+        [HttpPost]
+        public ActionResult Create([Bind(Include = "FirstName, LastName, Titles, Photo")]Doctor doctor)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    using (var uow = new UnitOfWork())
+                    {
+                        var repository = new Repository<Doctor>(uow);
+                        repository.Add(doctor);
+                        uow.Commit();
+                    }
+                    return RedirectToAction("Details", new
+                    {
+                        id = doctor.Id
+                    });
+                }
+            }
+            catch (DataException)
+            {
+                ModelState.AddModelError("", "Niepoprawne dane.");
+            }
+            return View(doctor);
+        }
+
+        //
+        // GET: /Doctors/Edit/5
+
+        public ActionResult Edit(int id)
+        {
+            return View();
+        }
+
+        //
+        // POST: /Doctors/Edit/5
+
+        [HttpPost]
+        public ActionResult Edit(int id, FormCollection collection)
+        {
+            try
+            {
+                // TODO: Add update logic here
+
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        //
+        // GET: /Doctors/Delete/5
+
+        public ActionResult Delete(int id)
+        {
+            return View();
+        }
+
+        //
+        // POST: /Doctors/Delete/5
+
+        [HttpPost]
+        public ActionResult Delete(int id, FormCollection collection)
+        {
+            try
+            {
+                // TODO: Add delete logic here
+
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View();
             }
         }
     }

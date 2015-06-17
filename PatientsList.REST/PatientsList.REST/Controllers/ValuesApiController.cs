@@ -7,7 +7,7 @@ using System.Web.Http;
 
 namespace PatientsList.REST.Controllers
 {
-    public class ValuesController : ApiController
+    public class ValuesApiController : ApiController
     {
         // GET api/values
         public IEnumerable<string> Get()

@@ -37,19 +37,19 @@ namespace PatientsList.REST.Controllers
                 {
                     Id = 1,
                     Name = "Anna Kowalska",
-                    CheckTime = new DateTime()
+                    VisitTime = new DateTime()
                 },
                 new Patient
                 {
                     Id = 2,
                     Name = "Jacek Gmoch",
-                    CheckTime = new DateTime()
+                    VisitTime = new DateTime()
                 },
                 new Patient
                 {
                     Id = 3,
                     Name = "Krzysztof Penderecki",
-                    CheckTime = new DateTime()
+                    VisitTime = new DateTime()
                 }
             });
 
