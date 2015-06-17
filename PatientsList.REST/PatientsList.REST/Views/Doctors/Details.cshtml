@@ -1,0 +1,59 @@
+﻿@model dynamic
+
+@{
+    ViewBag.Title = "Szczegóły";
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<div id="body">
+    <section class="content-wrapper clear-fix">
+        <h3>Doktor @ViewBag.Doctor.Name @ViewBag.Doctor.Surame</h3>
+
+        <h3>Zaplanowane wizyty:</h3>
+        @*<ol class="round">
+                @foreach (Patient patient in Model)
+                {
+                    <li>
+                        <div>Imię: @Html.DisplayFor(patientItem => patient.Name)</div>
+                        <div>Nazwisko: @Html.DisplayFor(patientItem => patient.CheckTime)</div>
+                        <div>@Html.ActionLink("Usuń wizytę", "RemovePatient", new { patientId = patient.Id, returnUrl = Url.Action(null) }, new { @class = "post-link-confirm", @data_confirm_text = "Czy na pewno chcesz usunąć wizytę?" })</div>
+                    </li>
+                }
+            </ol>*@
+        <div id="usersList">
+            <table>
+                <thead>
+                    <tr>
+                        <th>
+                            Zdjęcie
+                        </th>
+                        <th>
+                            Imię i Nazwisko
+                        </th>
+                        <th>Usuń</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <img style="width: 100px; height: auto" src='@Url.Action("UserImageSmall", "Home", new { id = 20 })' />
+                            </td>
+                            <td>
+                                @item.Name
+                            </td>
+                            <td>
+                                @Html.ActionLink("Usuń wizytę", "RemovePatient", new { patientId = item.Id, returnUrl = Url.Action(null) }, new { @class = "post-link-confirm", @data_confirm_text = "Czy na pewno chcesz usunąć wizytę?" })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div>
+            @Html.ActionLink("Dodaj wizytę", "AddDoctor", new { returnUrl = Url.Action(null) }, new { @class = "post-link-confirm", @data_confirm_text = "Czy na pewno chcesz dodać doktora?" })
+        </div>
+    </section>
+</div>
+
