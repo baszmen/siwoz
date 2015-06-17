@@ -110,7 +110,8 @@ namespace PatientsList
 
         private async void AsynchronousRESTActualization(object state)
         {
-              await DoctorsDataSource.ActualizeDoctors();
+            //  await DoctorsDataSource.ActualizeDoctors();
+           // _timer.Change(TIME_INTERVAL_IN_MILLISECONDS, Timeout.Infinite);
         }
 
         /// <summary>
