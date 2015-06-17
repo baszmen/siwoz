@@ -28,7 +28,6 @@ namespace PatientsList.DataModel
                 OnPropertyChanged("Name");
             }
         }
-
         public string Titles
         {
             get { return _titles; }
@@ -62,18 +61,8 @@ namespace PatientsList.DataModel
             set
             {
                 _patientsList = value;
-                if (value != null)
-                    foreach (Patient t in _patientsList)
-                        t.TimesUp += OnTimesUp;
                 OnPropertyChanged("PatientsList");
             }
-        }
-
-        private void OnTimesUp(object sender, Patient patient)
-        {
-            patient.TimesUp -= OnTimesUp;
-            PatientsList.Remove(patient);
-            OnPropertyChanged("PatientsList");
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

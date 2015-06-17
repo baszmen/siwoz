@@ -50,7 +50,7 @@
                             <TextBlock Text="{Binding Name}" Foreground="{ThemeResource ListViewItemOverlayForegroundThemeBrush}" Style="{StaticResource TitleTextBlockStyle}" Height="60" Margin="15,0,15,0"/>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="{Binding PatientInfo}"  Foreground="{ThemeResource ListViewItemOverlaySecondaryForegroundThemeBrush}" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="NoWrap" Margin="15,0,15,10"/>
-                                <TextBlock Text="{Binding LeftTime, Converter={StaticResource StringFormatConverter}}" Foreground="{ThemeResource ListViewItemOverlaySecondaryForegroundThemeBrush}" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="NoWrap" Margin="15,0,15,10"/>
+                                <TextBlock Text="{Binding TimerTime, Converter={StaticResource StringFormatConverter}}" Foreground="{ThemeResource ListViewItemOverlaySecondaryForegroundThemeBrush}" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="NoWrap" Margin="15,0,15,10"/>
                             </StackPanel>
                         </StackPanel>
                     </Grid>

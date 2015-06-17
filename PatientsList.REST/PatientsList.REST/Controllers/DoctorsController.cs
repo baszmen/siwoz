@@ -23,7 +23,7 @@ namespace PatientsList.REST.Controllers
                 {
                     Id = 1,
                     Name = "Anna Zawodna 1",
-                    CheckTime = DateTime.Now + TimeSpan.FromSeconds(10)
+                    CheckTime = DateTime.Now + TimeSpan.FromSeconds(20)
                 },
 
                 new Patient
@@ -46,7 +46,7 @@ namespace PatientsList.REST.Controllers
                 {
                     Id = 4,
                     Name = "Anna Zawodna 2",
-                    CheckTime = DateTime.Now + TimeSpan.FromSeconds(10)
+                    CheckTime = DateTime.Now + TimeSpan.FromSeconds(20)
                 },
 
                 new Patient
@@ -69,7 +69,7 @@ namespace PatientsList.REST.Controllers
                 {
                     Id = 7,
                     Name = "Anna Zawodna 3",
-                    CheckTime = DateTime.Now + TimeSpan.FromSeconds(10)
+                    CheckTime = DateTime.Now + TimeSpan.FromSeconds(20)
                 },
 
                 new Patient

@@ -28,37 +28,34 @@ namespace PatientsList.DataModel
                 {
                     if (!Inside)
                     {
-                        var ts = CheckTime.Subtract(DateTime.Now);
+                        var ts = VisitTime.Subtract(DateTime.Now);
                         if (ts.Ticks <= 0)
                         {
-                            LeftTime = TimeSpan.Zero;
+                            TimerTime = TimeSpan.Zero;
                             Inside = true;
                             ImagePath = "Assets/doctor.jpeg";
-                            LeftTime = VisitTime;
+                            TimerTime = Duration;
                         }
-                        else LeftTime = ts;
+                        else TimerTime = ts;
                     }
 
                     if (Inside)
                     {
-                        LeftTime = LeftTime.Subtract(TimeSpan.FromMilliseconds(TIME_INTERVAL_IN_MILLISECONDS));
-                        if (LeftTime.Ticks <= 0)
-                        {
-                            if (TimesUp != null)
-                                TimesUp(this, this);
-                        }
+                        TimerTime = TimerTime.Subtract(TimeSpan.FromMilliseconds(TIME_INTERVAL_IN_MILLISECONDS));
+                        if (TimerTime.Ticks <= 0)
+                            return;
                     }
+                    _timer.Change(TIME_INTERVAL_IN_MILLISECONDS, Timeout.Infinite);
                 });
-            _timer.Change(TIME_INTERVAL_IN_MILLISECONDS, Timeout.Infinite);
         }
 
         private int _id;
         private string _name;
         private bool _inside = false;
         private string _patientInfo = "Do wizyty pozostało:";
-        private DateTime _checkTime;
-        private TimeSpan _leftTime;
-        private TimeSpan _visitTime = TimeSpan.FromSeconds(10);
+        private DateTime _visitTime;
+        private TimeSpan _timerTime;
+        private TimeSpan _duration = TimeSpan.FromSeconds(10);
         private string _imagePath = "Assets/person.jpg";
 
         public bool Inside
@@ -89,31 +86,31 @@ namespace PatientsList.DataModel
                 OnPropertyChanged("Name");
             }
         }
-        public DateTime CheckTime
-        {
-            get { return _checkTime; }
-            set
-            {
-                _checkTime = value;
-                OnPropertyChanged("CheckTime");
-            }
-        }
-        public TimeSpan LeftTime
-        {
-            get { return _leftTime; }
-            set
-            {
-                _leftTime = value;
-                OnPropertyChanged("LeftTime");
-            }
-        }
-        public TimeSpan VisitTime
+        public DateTime VisitTime
         {
             get { return _visitTime; }
             set
             {
                 _visitTime = value;
                 OnPropertyChanged("VisitTime");
+            }
+        }
+        public TimeSpan TimerTime
+        {
+            get { return _timerTime; }
+            set
+            {
+                _timerTime = value;
+                OnPropertyChanged("TimerTime");
+            }
+        }
+        public TimeSpan Duration
+        {
+            get { return _duration; }
+            set
+            {
+                _duration = value;
+                OnPropertyChanged("Duration");
             }
         }
         public string ImagePath
@@ -135,7 +132,6 @@ namespace PatientsList.DataModel
             }
         }
 
-        public event EventHandler<Patient> TimesUp;
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]

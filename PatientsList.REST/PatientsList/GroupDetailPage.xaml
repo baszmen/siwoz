@@ -54,7 +54,7 @@
                             <TextBlock Text="{Binding Name}" Style="{StaticResource TitleTextBlockStyle}" TextWrapping="NoWrap"/>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="{Binding PatientInfo}"  Foreground="{ThemeResource ListViewItemOverlaySecondaryForegroundThemeBrush}" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="NoWrap" Margin="15,0,15,10"/>
-                                <TextBlock Text="{Binding LeftTime, Converter={StaticResource StringFormatConverter}}" Foreground="{ThemeResource ListViewItemOverlaySecondaryForegroundThemeBrush}" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="NoWrap" Margin="15,0,15,10"/>
+                                <TextBlock Text="{Binding TimerTime, Converter={StaticResource StringFormatConverter}}" Foreground="{ThemeResource ListViewItemOverlaySecondaryForegroundThemeBrush}" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="NoWrap" Margin="15,0,15,10"/>
                             </StackPanel>
                         </StackPanel>
                     </Grid>
