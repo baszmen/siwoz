@@ -11,14 +11,14 @@ namespace PatientsList.REST
         {
             config.Routes.MapHttpRoute(
                 name: "DoctorsApi",
-                routeTemplate: "api/doctors/{id}",
-                defaults: new {controller = "DoctorsApiController", id = RouteParameter.Optional }
+                routeTemplate: "api/Doctors/{id}",
+                defaults: new { controller = "DoctorsApi", id = RouteParameter.Optional }
             );
 
             config.Routes.MapHttpRoute(
                 name: "ValuesApi",
-                routeTemplate: "api/values/{id}",
-                defaults: new { controller = "ValuesApiController", id = RouteParameter.Optional }
+                routeTemplate: "api/Values/{id}",
+                defaults: new { controller = "ValuesApi", id = RouteParameter.Optional }
             );
 
             // Uncomment the following line of code to enable query support for actions with an IQueryable or IQueryable<T> return type.
