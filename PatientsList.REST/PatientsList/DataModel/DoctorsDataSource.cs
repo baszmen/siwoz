@@ -59,7 +59,7 @@ namespace PatientsList.DataModel
                                 //    doc.PatientsList.Add(p);
                                 //else
                                 //{
-                                //    pat.CheckTime = p.CheckTime;
+                                //    pat.VisitTime = p.VisitTime;
                                 //    pat.Name = p.Name;
                                 //}
                             }
