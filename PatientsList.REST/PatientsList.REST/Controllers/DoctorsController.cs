@@ -20,6 +20,11 @@ namespace PatientsList.REST.Controllers
         //
         // GET: /Doctors/
 
+        protected ActionResult RedirectToLocal(string returnUrl)
+        {
+            return Redirect(Url.IsLocalUrl(returnUrl) ? returnUrl : "/");
+        }
+
         public ActionResult Index()
         {
             List<Doctor> doctors;
@@ -33,18 +38,22 @@ namespace PatientsList.REST.Controllers
 
         //
         // GET: /Doctors/Details/5
-
-        public ActionResult Details(int id)
+        
+        public ActionResult Details(int id, DateTime? visitsDate)
         {
+            var date = visitsDate ?? DateTime.Now;
             List<Patient> patients;
             Doctor doctor;
             using (var uow = new UnitOfWork())
             {
                 var doctorsRepo = new Repository<Doctor>(uow);
                 doctor = doctorsRepo.Get(id);
-                patients = new List<Patient>(doctor.PatientsList);
+                if (doctor == null)
+                    throw new HttpException(404, "Brak doktora z podanym id."); 
+                patients = new List<Patient>(doctor.PatientsList.Where(x => x.VisitTime.Date == date.Date));
             }
             ViewBag.Doctor = doctor;
+            ViewBag.Date = date;
             return View(patients);
         }
 
@@ -105,13 +114,7 @@ namespace PatientsList.REST.Controllers
         [HttpPost]
         public ActionResult Create(FormCollection doctorFormCollection)
         {
-            var doctor = new Doctor
-            {
-                Name = doctorFormCollection.Get("Name"),
-                Surname = doctorFormCollection.Get("Surname"),
-                Titles = doctorFormCollection.Get("Titles"),
-                Photo = getPassedImage()
-            };
+            Doctor doctor = null;
             try
             {
                 if (ModelState.IsValid)
@@ -120,13 +123,32 @@ namespace PatientsList.REST.Controllers
                     using (var uow = new UnitOfWork())
                     {
                         var repository = new Repository<Doctor>(uow);
-                        repository.Add(doctor);
+
+                        int id = 0;
+                        try
+                        {
+                            id = Convert.ToInt32(doctorFormCollection.Get("Id"));
+                        }
+                        catch (FormatException) {}
+                        if (id > 0)
+                        {
+                            doctor = repository.Get(id);
+                        }
+                        
+                        if (doctor == null)
+                            doctor = new Doctor();
+                        doctor.Name = doctorFormCollection.Get("Name");
+                        doctor.Surname = doctorFormCollection.Get("Surname");
+                        doctor.Titles = doctorFormCollection.Get("Titles");
+                        var image = getPassedImage();
+                        if (image != null)
+                            doctor.Photo = image;
+                        
+                        if (id <= 0)
+                            repository.Add(doctor);
                         uow.Commit();
                     }
-                    return RedirectToAction("Details", new
-                    {
-                        id = doctor.Id
-                    });
+                    return RedirectToAction("Index");
                 }
             }
             catch (DataException)
@@ -141,51 +163,53 @@ namespace PatientsList.REST.Controllers
 
         public ActionResult Edit(int id)
         {
-            return View();
+            Doctor doctor;
+            using (var uow = new UnitOfWork())
+            {
+                var repository = new Repository<Doctor>(uow);
+                doctor = repository.Get(id);
+            }
+            if (doctor != null)
+                return View("Create", doctor);
+            throw new HttpException(404, "Brak doktora z podanym id."); 
         }
 
         //
         // POST: /Doctors/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult Edit(int id, FormCollection doctorFormCollection)
         {
-            try
-            {
-                // TODO: Add update logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
+            return Create(doctorFormCollection);
         }
 
-        //
-        // GET: /Doctors/Delete/5
-
-        public ActionResult Delete(int id)
+        public enum ManageMessageId
         {
-            return View();
+            UserRemoved,
+            UserNotRemoved
         }
 
         //
         // POST: /Doctors/Delete/5
 
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        public ActionResult Delete(int id, string returnUrl)
         {
-            try
-            {
-                // TODO: Add delete logic here
+            TempData["msg"] = removeUser(id) ? ManageMessageId.UserRemoved : ManageMessageId.UserNotRemoved;
+            return RedirectToLocal(returnUrl);
+        }
 
-                return RedirectToAction("Index");
-            }
-            catch
+        private bool removeUser(int doctorId)
+        {
+            using (var uow = new UnitOfWork())
             {
-                return View();
+                var repo = new Repository<Doctor>(uow);
+                var repoPatients = new Repository<Patient>(uow);
+                repoPatients.Delete(repo.Get(doctorId).PatientsList);
+                repo.Delete(repo.Get(doctorId));
+                uow.Commit();
             }
+            return true;
         }
     }
 }
