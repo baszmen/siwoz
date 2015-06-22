@@ -39,8 +39,9 @@ namespace PatientsList.REST.Controllers
         //
         // GET: /Doctors/Details/5
         
-        public ActionResult Details(int id, DateTime? visitsDate)
+        public ActionResult Details(int id = 0, DateTime? visitsDate = null)
         {
+            if (id == 0) return RedirectToAction("Index");
             var date = visitsDate ?? DateTime.Now;
             List<Patient> patients;
             Doctor doctor;

@@ -30,9 +30,19 @@
                             Zdjęcie
                         </th>
                         <th>
-                            Imię i Nazwisko
+                            Imię
                         </th>
-                        <th>Usuń</th>
+                        <th>
+                            Nazwisko
+                        </th>
+                        <th>
+                            Wizyta
+                        </th>
+                        <th>
+                            Czas trwania
+                        </th>
+                        <th>Przyjmij</th>
+                        <th>Akcja</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -46,7 +56,23 @@
                                 @item.Name
                             </td>
                             <td>
-                                @Html.ActionLink("Usuń wizytę", "Delete", new { doctorId = ViewBag.Doctor.Id, visitId = item.Id}, new { @class = "post-link-confirm", @data_confirm_text = "Czy na pewno chcesz usunąć wizytę?" })
+                                @item.Surname
+                            </td>
+                            <td>
+                                @item.VisitTime
+                            </td>
+                            <td>
+                                @item.Duration
+                            </td>
+                            <td>
+                                <!-- TODO: przycisk przyjmij wizytanta -->
+                            </td>
+                            <td>
+                                @if (item.IsEnded == false)
+                                {
+                                    @Html.ActionLink("Edytuj wizytę", "Edit", "Visits", new { doctorId = ViewBag.Doctor.Id, visitId = item.Id }, null)
+                                    @Html.ActionLink("Usuń wizytę", "Delete", "Visits", new { doctorId = ViewBag.Doctor.Id, visitId = item.Id }, new { @class = "post-link-confirm", @data_confirm_text = "Czy na pewno chcesz usunąć wizytę?" })
+                                }
                             </td>
                         </tr>
                     }

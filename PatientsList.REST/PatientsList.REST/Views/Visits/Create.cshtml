@@ -7,6 +7,7 @@
 
 @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
+    @InputExtensions.Hidden(Html, "doctorId", ViewBag.DoctorId)
     <fieldset>
         <div class="form-group">
             @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-2" })

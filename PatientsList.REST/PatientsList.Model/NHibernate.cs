@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -76,6 +77,29 @@ namespace PatientsList.Model
             m_connection = m_sessionFactory.OpenSession().Connection;
             var export = new SchemaExport(m_config);
             export.Execute(true, true, false, m_connection, null);
+
+            // TODO temporary init:
+            var session = m_sessionFactory.OpenSession();
+            var trans = session.BeginTransaction();
+            trans.Begin();
+            session.Save(new Doctor
+            {
+                Name = "Adam",
+                Surname = "Badam",
+                Titles = "Doktor Rehabilitowany",
+                Photo =
+                    File.ReadAllBytes(@"C:\Users\AdminSecPL\git\siwoz\PatientsList.REST\PatientsList\Assets\person.jpg")
+            });
+            session.Save(new Doctor
+            {
+                Name = "Jan",
+                Surname = "Pan",
+                Titles = "Arcyherold",
+                Photo =
+                    File.ReadAllBytes(@"C:\Users\AdminSecPL\git\siwoz\PatientsList.REST\PatientsList\Assets\doctor.jpeg")
+            });
+            trans.Commit();
+            session.Close();
         }
     }
 }

@@ -13,13 +13,14 @@ namespace PatientsList.REST.Controllers
 {
     public class VisitsController : Controller
     {
-        
-        
+
+
         //
         // GET: /Visits/Create
 
         public ActionResult Create(int doctorId)
         {
+            ViewBag.DoctorId = doctorId;
             return View();
         }
 
@@ -38,6 +39,8 @@ namespace PatientsList.REST.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    if (visit.IsEnded)
+                        throw new HttpException(400, "Nie można edytować lub tworzyć zakończonej wizyty");
                     using (var uow = new UnitOfWork())
                     {
                         var repository = new Repository<Patient>(uow);
@@ -53,33 +56,38 @@ namespace PatientsList.REST.Controllers
                         }
                         uow.Commit();
                     }
-                    return RedirectToAction("Details", "Doctors", new {id = doctorId, visitsDate = visit.VisitTime.Date});
+                    return RedirectToAction("Details", "Doctors", new { id = doctorId, visitsDate = visit.VisitTime.Date });
                 }
             }
             catch (DataException)
             {
                 ModelState.AddModelError("", "Niepoprawne dane.");
             }
-            return RedirectToAction("Details", "Doctors", new {id = doctorId});
+            return RedirectToAction("Details", "Doctors", new { id = doctorId });
         }
 
         //
-        // GET: /Visits/Edit/5/1
+        // GET: /Visits/Edit
 
         public ActionResult Edit(int doctorId, int visitId)
         {
-            Doctor doctor;
+            Patient visit = null;
+            Doctor doctor = null;
             using (var uow = new UnitOfWork())
             {
                 var repository = new Repository<Doctor>(uow);
                 doctor = repository.Get(doctorId);
+                if (doctor != null)
+                {
+                    visit = doctor.PatientsList.FirstOrDefault(x => x.Id == visitId);
+                }
             }
-            if (doctor != null)
+            if (visit != null)
             {
-                return View("Create", doctor);
-
+                ViewBag.DoctorId = doctorId;
+                return View("Create", visit);
             }
-            throw new HttpException(404, "Brak doktora z podanym id."); 
+            throw new HttpException(404, "Brak doktora z podanym id.");
         }
 
         //
@@ -115,7 +123,7 @@ namespace PatientsList.REST.Controllers
             }
             catch
             {
-                return RedirectToAction("Details", "Doctors", new {id = doctorId});
+                return RedirectToAction("Details", "Doctors", new { id = doctorId });
             }
         }
     }
