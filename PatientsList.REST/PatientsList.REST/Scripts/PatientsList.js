@@ -6,7 +6,22 @@
         postLink.call(this, true);
     });
 
-    tooltips();
+    var d = new Date();
+    d.setHours(d.getHours() + 3);
+    d.setMinutes(0);
+    var dStr = d.toISOString().slice(0, 16).replace("T", " ");
+    $('.datetimepicker').datetimepicker({
+        lang: 'pl',
+        //inline: true,
+        timepicker: true,
+        step: 15,
+        defaultTime: d.toISOString().slice(11, 16),
+        onChangeDateTime: function (dp, $input) {
+            $input.val(); // lol xD
+        }
+    });
+    $(".datetimepicker[value='']").val(dStr);
+    //tooltips();
 });
 
 function tooltips() {

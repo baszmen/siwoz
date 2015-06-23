@@ -11,6 +11,7 @@ using System.Web.Routing;
 using PatientsList.Model;
 using PatientsList.Model.Entities;
 using PatientsList.Model.Repository;
+using PatientsList.REST.Models;
 
 namespace PatientsList.REST.Controllers
 {
@@ -27,12 +28,9 @@ namespace PatientsList.REST.Controllers
 
         public ActionResult Index()
         {
-            List<Doctor> doctors;
-            using (var uow = new UnitOfWork())
-            {
-                var repo = new Repository<Doctor>(uow);
-                doctors = new List<Doctor>(repo.Query());
-            }
+            var uow = UnitOfWorkPerRequest.Get();
+            var repo = new Repository<Doctor>(uow);
+            var doctors = new List<Doctor>(repo.Query());
             return View(doctors);
         }
 
@@ -43,16 +41,12 @@ namespace PatientsList.REST.Controllers
         {
             if (id == 0) return RedirectToAction("Index");
             var date = visitsDate ?? DateTime.Now;
-            List<Patient> patients;
-            Doctor doctor;
-            using (var uow = new UnitOfWork())
-            {
-                var doctorsRepo = new Repository<Doctor>(uow);
-                doctor = doctorsRepo.Get(id);
-                if (doctor == null)
-                    throw new HttpException(404, "Brak doktora z podanym id."); 
-                patients = new List<Patient>(doctor.PatientsList.Where(x => x.VisitTime.Date == date.Date));
-            }
+            var uow = UnitOfWorkPerRequest.Get();
+            var doctorsRepo = new Repository<Doctor>(uow);
+            var doctor = doctorsRepo.Get(id);
+            if (doctor == null)
+                throw new HttpException(404, "Brak doktora z podanym id."); 
+            var patients = new List<Patient>(doctor.PatientsList.Where(x => x.VisitTime.Date == date.Date));
             ViewBag.Doctor = doctor;
             ViewBag.Date = date;
             return View(patients);
@@ -62,25 +56,18 @@ namespace PatientsList.REST.Controllers
         // GET: /UserImageSmall/1
         public FileResult GetImage(int id)
         {
-            using (var uow = new UnitOfWork())
+            var uow = UnitOfWorkPerRequest.Get();
+            var doctor = new Repository<Doctor>(uow).Get(id);
+            if (doctor == null) return null;
+            var imageBytes = doctor.Photo;
+            if (imageBytes == null) return null;
+            var image = new WebImage(imageBytes);
+            if (image.Height > LARGE_IMG_SIZE || image.Width > LARGE_IMG_SIZE)
             {
-                Doctor doctor = new Repository<Doctor>(uow).Get(id);
-                if (doctor != null)
-                {
-                    byte[] imageBytes = doctor.Photo;
-                    if (imageBytes != null)
-                    {
-                        WebImage image = new WebImage(imageBytes);
-                        if (image.Height > LARGE_IMG_SIZE || image.Width > LARGE_IMG_SIZE)
-                        {
-                            image = image.Resize(LARGE_IMG_SIZE, LARGE_IMG_SIZE);
-                        }
-                        image = image.Resize(200, 200, true);
-                        return File(image.GetBytes(), "image/" + image.ImageFormat);
-                    }
-                }
+                image = image.Resize(LARGE_IMG_SIZE, LARGE_IMG_SIZE);
             }
-            return null;
+            image = image.Resize(200, 200, true);
+            return File(image.GetBytes(), "image/" + image.ImageFormat);
         }
 
         //
@@ -120,35 +107,32 @@ namespace PatientsList.REST.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    
-                    using (var uow = new UnitOfWork())
-                    {
-                        var repository = new Repository<Doctor>(uow);
+                    var uow = UnitOfWorkPerRequest.Get();
+                    var repository = new Repository<Doctor>(uow);
 
-                        int id = 0;
-                        try
-                        {
-                            id = Convert.ToInt32(doctorFormCollection.Get("Id"));
-                        }
-                        catch (FormatException) {}
-                        if (id > 0)
-                        {
-                            doctor = repository.Get(id);
-                        }
-                        
-                        if (doctor == null)
-                            doctor = new Doctor();
-                        doctor.Name = doctorFormCollection.Get("Name");
-                        doctor.Surname = doctorFormCollection.Get("Surname");
-                        doctor.Titles = doctorFormCollection.Get("Titles");
-                        var image = getPassedImage();
-                        if (image != null)
-                            doctor.Photo = image;
-                        
-                        if (id <= 0)
-                            repository.Add(doctor);
-                        uow.Commit();
+                    int id = 0;
+                    try
+                    {
+                        id = Convert.ToInt32(doctorFormCollection.Get("Id"));
                     }
+                    catch (FormatException) {}
+                    if (id > 0)
+                    {
+                        doctor = repository.Get(id);
+                    }
+                        
+                    if (doctor == null)
+                        doctor = new Doctor();
+                    doctor.Name = doctorFormCollection.Get("Name");
+                    doctor.Surname = doctorFormCollection.Get("Surname");
+                    doctor.Titles = doctorFormCollection.Get("Titles");
+                    var image = getPassedImage();
+                    if (image != null)
+                        doctor.Photo = image;
+                        
+                    if (id <= 0)
+                        repository.Add(doctor);
+                    uow.Commit();
                     return RedirectToAction("Index");
                 }
             }
@@ -165,11 +149,9 @@ namespace PatientsList.REST.Controllers
         public ActionResult Edit(int id)
         {
             Doctor doctor;
-            using (var uow = new UnitOfWork())
-            {
-                var repository = new Repository<Doctor>(uow);
-                doctor = repository.Get(id);
-            }
+            var uow = UnitOfWorkPerRequest.Get();
+            var repository = new Repository<Doctor>(uow);
+            doctor = repository.Get(id);
             if (doctor != null)
                 return View("Create", doctor);
             throw new HttpException(404, "Brak doktora z podanym id."); 
@@ -202,14 +184,12 @@ namespace PatientsList.REST.Controllers
 
         private bool removeUser(int doctorId)
         {
-            using (var uow = new UnitOfWork())
-            {
-                var repo = new Repository<Doctor>(uow);
-                var repoPatients = new Repository<Patient>(uow);
-                repoPatients.Delete(repo.Get(doctorId).PatientsList);
-                repo.Delete(repo.Get(doctorId));
-                uow.Commit();
-            }
+            var uow = UnitOfWorkPerRequest.Get();
+            var repo = new Repository<Doctor>(uow);
+            var repoPatients = new Repository<Patient>(uow);
+            repoPatients.Delete(repo.Get(doctorId).PatientsList);
+            repo.Delete(repo.Get(doctorId));
+            uow.Commit();
             return true;
         }
     }

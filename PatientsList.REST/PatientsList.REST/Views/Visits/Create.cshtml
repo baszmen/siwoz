@@ -8,6 +8,7 @@
 @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @InputExtensions.Hidden(Html, "doctorId", ViewBag.DoctorId)
+    @InputExtensions.Hidden(Html, "visitId", Model == null ? 0 : Model.Id)
     <fieldset>
         <div class="form-group">
             @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-2" })
@@ -28,7 +29,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.VisitTime, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.VisitTime)
+                @Html.TextBoxFor(model => model.VisitTime, new { @class="datetimepicker"})
                 @Html.ValidationMessageFor(model => model.VisitTime)
             </div>
         </div>
@@ -36,7 +37,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Duration, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Duration)
+                @Html.DropDownList("duration", ViewBag.DurationTimes as IEnumerable<SelectListItem>)
                 @Html.ValidationMessageFor(model => model.Duration)
             </div>
         </div>

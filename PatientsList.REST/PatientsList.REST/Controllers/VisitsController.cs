@@ -8,11 +8,24 @@ using System.Web.Mvc;
 using PatientsList.Model;
 using PatientsList.Model.Entities;
 using PatientsList.Model.Repository;
+using PatientsList.REST.Models;
 
 namespace PatientsList.REST.Controllers
 {
     public class VisitsController : Controller
     {
+
+        private ActionResult CreateEditView(int doctorId, Patient visit = null)
+        {
+            ViewBag.DoctorId = doctorId;
+            ViewBag.DurationTimes = new List<SelectListItem>
+            {
+                new SelectListItem {Text = "00:15", Value = "00:15:00"},
+                new SelectListItem {Text = "00:30", Value = "00:30:00"},
+                new SelectListItem {Text = "00:45", Value = "00:45:00"},
+            };
+            return View("Create", visit);
+        }
 
 
         //
@@ -20,8 +33,7 @@ namespace PatientsList.REST.Controllers
 
         public ActionResult Create(int doctorId)
         {
-            ViewBag.DoctorId = doctorId;
-            return View();
+            return CreateEditView(doctorId);
         }
 
         //
@@ -41,21 +53,19 @@ namespace PatientsList.REST.Controllers
                 {
                     if (visit.IsEnded)
                         throw new HttpException(400, "Nie można edytować lub tworzyć zakończonej wizyty");
-                    using (var uow = new UnitOfWork())
-                    {
-                        var repository = new Repository<Patient>(uow);
-                        var docRepo = new Repository<Doctor>(uow);
-                        var doctor = docRepo.Get(doctorId);
-                        if (doctor == null)
-                            throw new HttpException(404, "Podany doktor nie istnieje");
+                    var uow = UnitOfWorkPerRequest.Get();
+                    var repository = new Repository<Patient>(uow);
+                    var docRepo = new Repository<Doctor>(uow);
+                    var doctor = docRepo.Get(doctorId);
+                    if (doctor == null)
+                        throw new HttpException(404, "Podany doktor nie istnieje");
 
-                        if (visit.Id <= 0)
-                        {
-                            repository.Add(visit);
-                            doctor.PatientsList.Add(visit);
-                        }
-                        uow.Commit();
+                    if (visit.Id <= 0)
+                    {
+                        repository.Add(visit);
+                        doctor.PatientsList.Add(visit);
                     }
+                    uow.Commit();
                     return RedirectToAction("Details", "Doctors", new { id = doctorId, visitsDate = visit.VisitTime.Date });
                 }
             }
@@ -73,19 +83,16 @@ namespace PatientsList.REST.Controllers
         {
             Patient visit = null;
             Doctor doctor = null;
-            using (var uow = new UnitOfWork())
+            var uow = UnitOfWorkPerRequest.Get();
+            var repository = new Repository<Doctor>(uow);
+            doctor = repository.Get(doctorId);
+            if (doctor != null)
             {
-                var repository = new Repository<Doctor>(uow);
-                doctor = repository.Get(doctorId);
-                if (doctor != null)
-                {
-                    visit = doctor.PatientsList.FirstOrDefault(x => x.Id == visitId);
-                }
+                visit = doctor.PatientsList.FirstOrDefault(x => x.Id == visitId);
             }
             if (visit != null)
             {
-                ViewBag.DoctorId = doctorId;
-                return View("Create", visit);
+                return CreateEditView(doctorId, visit);
             }
             throw new HttpException(404, "Brak doktora z podanym id.");
         }
@@ -107,19 +114,18 @@ namespace PatientsList.REST.Controllers
         {
             try
             {
-                using (var uow = new UnitOfWork())
+                var uow = UnitOfWorkPerRequest.Get();
+                var visitRepo = new Repository<Patient>(uow);
+                try
                 {
-                    var visitRepo = new Repository<Patient>(uow);
-                    try
-                    {
-                        visitRepo.Delete(visitRepo.Get(visitId));
-                    }
-                    catch (NullReferenceException)
-                    {
-                        // don't give a shit
-                    }
-                    return RedirectToAction("Details", "Doctors", new { id = doctorId });
+                    visitRepo.Delete(visitRepo.Get(visitId));
                 }
+                catch (NullReferenceException)
+                {
+                    // don't give a shit
+                }
+                uow.Commit();
+                return RedirectToAction("Details", "Doctors", new { id = doctorId });
             }
             catch
             {

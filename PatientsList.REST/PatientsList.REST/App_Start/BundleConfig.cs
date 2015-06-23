@@ -23,6 +23,7 @@ namespace PatientsList.REST
                         "~/Scripts/jquery-ui-{version}.js",
                         "~/Scripts/jquery.unobtrusive*",
                         "~/Scripts/jquery.validate*",
+                        "~/Scripts/jquery.datetimepicker.js",
                         "~/Scripts/PatientsList.js"
                 ));
 
@@ -46,7 +47,8 @@ namespace PatientsList.REST
                         "~/Content/themes/base/jquery.ui.tabs.css",
                         "~/Content/themes/base/jquery.ui.datepicker.css",
                         "~/Content/themes/base/jquery.ui.progressbar.css",
-                        "~/Content/themes/base/jquery.ui.theme.css"));
+                        "~/Content/themes/base/jquery.ui.theme.css",
+                        "~/Content/themes/base/jquery.datetimepicker.css"));
         }
     }
 }
