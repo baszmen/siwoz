@@ -17,7 +17,7 @@
     <header>
         <div class="content-wrapper">
             <div class="float-left">
-                <a href="@Url.Action("Doctors", "Home")" class="site-title">
+                <a href="@Url.Action("Index", "Doctors")" class="site-title">
                     <span>Hoży</span><br />
                     <span>doktorzy</span>
                 </a>
@@ -38,7 +38,7 @@
         </div>
     </footer>
 
-    @Scripts.Render("~/bundles/aibarber")
+    @Scripts.Render("~/bundles/patients")
     @RenderSection("scripts", required: false)
     <script type="text/javascript">
         @RenderSection("scriptsText", required: false)

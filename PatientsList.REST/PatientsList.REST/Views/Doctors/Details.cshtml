@@ -7,9 +7,11 @@
 
 <div id="body">
     <section class="content-wrapper clear-fix">
-        <h3>Doktor @ViewBag.Doctor.Name @ViewBag.Doctor.Surame</h3>
+        <img style="width: 100px; height: auto" src='@Url.Action("GetImage", "Doctors", new { id = ViewBag.Doctor.Id })' />
 
-        <h3>Zaplanowane wizyty:</h3>
+        <h3>@ViewBag.Doctor.Titles @ViewBag.Doctor.Name @ViewBag.Doctor.Surname</h3>
+
+        <h3>Zaplanowane wizyty na dzień @ViewBag.Date.ToShortDateString():</h3>
         @*<ol class="round">
                 @foreach (Patient patient in Model)
                 {
@@ -25,12 +27,19 @@
                 <thead>
                     <tr>
                         <th>
-                            Zdjęcie
+                            Imię
                         </th>
                         <th>
-                            Imię i Nazwisko
+                            Nazwisko
                         </th>
-                        <th>Usuń</th>
+                        <th>
+                            Wizyta
+                        </th>
+                        <th>
+                            Czas trwania
+                        </th>
+                        <th>Przyjmij</th>
+                        <th>Akcja</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -38,13 +47,26 @@
                     {
                         <tr>
                             <td>
-                                <img style="width: 100px; height: auto" src='@Url.Action("UserImageSmall", "Home", new { id = 20 })' />
-                            </td>
-                            <td>
                                 @item.Name
                             </td>
                             <td>
-                                @Html.ActionLink("Usuń wizytę", "RemovePatient", new { patientId = item.Id, returnUrl = Url.Action(null) }, new { @class = "post-link-confirm", @data_confirm_text = "Czy na pewno chcesz usunąć wizytę?" })
+                                @item.Surname
+                            </td>
+                            <td>
+                                @item.VisitTime
+                            </td>
+                            <td>
+                                @item.Duration
+                            </td>
+                            <td>
+                                <!-- TODO: przycisk przyjmij wizytanta -->
+                            </td>
+                            <td>
+                                @if (item.IsEnded == false)
+                                {
+                                    @Html.ActionLink("Edytuj wizytę", "Edit", "Visits", new { doctorId = ViewBag.Doctor.Id, visitId = item.Id }, null)
+                                    @Html.ActionLink("Usuń wizytę", "Delete", "Visits", new { doctorId = ViewBag.Doctor.Id, visitId = item.Id }, new { @class = "post-link-confirm", @data_confirm_text = "Czy na pewno chcesz usunąć wizytę?" })
+                                }
                             </td>
                         </tr>
                     }
@@ -52,7 +74,7 @@
             </table>
         </div>
         <div>
-            @Html.ActionLink("Dodaj wizytę", "AddDoctor", new { returnUrl = Url.Action(null) }, new { @class = "post-link-confirm", @data_confirm_text = "Czy na pewno chcesz dodać doktora?" })
+            @Html.ActionLink("Dodaj wizytę", "Create", "Visits", new { doctorId = ViewBag.Doctor.Id }, null)
         </div>
     </section>
 </div>

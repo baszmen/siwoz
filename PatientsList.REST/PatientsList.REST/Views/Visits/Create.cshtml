@@ -1,13 +1,14 @@
-﻿@model Doctor
+﻿@model Patient
 
 @{
-    ViewBag.Title = (Model != null && Model.Id > 0) ? "Edytuj doktora" : "Dodaj doktora";
+    ViewBag.Title = "Dodaj wizytę";
     Layout = "../Shared/_Layout.cshtml";
 }
 
 @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
-    @Html.HiddenFor(model => model.Id)
+    @InputExtensions.Hidden(Html, "doctorId", ViewBag.DoctorId)
+    @InputExtensions.Hidden(Html, "visitId", Model == null ? 0 : Model.Id)
     <fieldset>
         <div class="form-group">
             @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-2" })
@@ -16,7 +17,7 @@
                 @Html.ValidationMessageFor(model => model.Name)
             </div>
         </div>
-        
+
         <div class="form-group">
             @Html.LabelFor(model => model.Surname, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -24,36 +25,24 @@
                 @Html.ValidationMessageFor(model => model.Surname)
             </div>
         </div>
-        
-        <div class="form-group">
-            @Html.LabelFor(model => model.Titles, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Titles)
-                @Html.ValidationMessageFor(model => model.Titles)
-            </div>
-        </div>
-        
-        @if (Model != null && Model.Id > 0)
-        {
-            <div>
-                <h3>Aktualne zdjęcie:</h3>
-                <img style="width: 100px; height: auto" src='@Url.Action("GetImage", "Doctors", new { id = Model.Id })' />
-            </div>
-        }
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Photo, new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.VisitTime, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                <input type="file" name="Photo"/>
+                @Html.TextBoxFor(model => model.VisitTime, new { @class="datetimepicker"})
+                @Html.ValidationMessageFor(model => model.VisitTime)
             </div>
         </div>
-        @if (Model != null && Model.Id > 0)
-        {
-            <input type="submit" value="Zapisz" />
-        }
-        else
-        {
-            <input type="submit" value="Utwórz" />
-        }
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Duration, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("duration", ViewBag.DurationTimes as IEnumerable<SelectListItem>)
+                @Html.ValidationMessageFor(model => model.Duration)
+            </div>
+        </div>
+
+        <input type="submit" value="Utwórz" />
     </fieldset>
 }
+

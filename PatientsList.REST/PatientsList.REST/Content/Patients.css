@@ -33,9 +33,15 @@ tr:nth-child(odd) {
     background: #FFF;
 }
 
+tbody>tr:hover {
+    background: #e1e1e1;
+    cursor: pointer;
+}
+
 #visitsList td {
     padding: 10px 5px;
 }
+
 
 /* TABELKI END */
 

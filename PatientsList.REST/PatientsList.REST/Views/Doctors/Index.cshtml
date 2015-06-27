@@ -23,9 +23,12 @@
                 <tbody>
                     @foreach (var item in Model)
                     {
-                        <tr>
+                        <tr onclick="location.href='@Url.Action("Details", "Doctors", new { id = item.Id})'" onmouseover="">
                             <td>
-                                <img style="width: 100px; height: auto" src='@Url.Action("UserImageSmall", "Home", new { id = item.Id })' />
+                                <img style="width: 100px; height: auto" src='@Url.Action("GetImage", "Doctors", new { id = item.Id })' />
+                            </td>
+                            <td>
+                                @item.Titles
                             </td>
                             <td>
                                 @item.Name
@@ -34,10 +37,8 @@
                                 @item.Surname
                             </td>
                             <td>
-                                @item.Titles
-                            </td>
-                            <td>
-                                @Html.ActionLink("Usuń użytkownika", "Delete", new { id = item.Id, returnUrl = Url.Action(null) }, new { @class = "post-link-confirm", @data_confirm_text = "Czy na pewno chcesz usunąć doktora?" })
+                                @Html.ActionLink("Edytuj doktora", "Edit", new { id = item.Id, returnUrl = Url.Action("Index") })
+                                @Html.ActionLink("Usuń doktora", "Delete", new { id = item.Id, returnUrl = Url.Action("Index") }, new { @class = "post-link-confirm", @data_confirm_text = String.Format("Czy na pewno chcesz usunąć {0} {1}?", item.Name, item.Surname) })
                             </td>
                         </tr>
                     }
@@ -49,7 +50,7 @@
                 </div>*@
         </div>
         <div>
-            @Html.ActionLink("Dodaj doktura", "Create")
+            <h2>@Html.ActionLink("Dodaj doktora", "Create")</h2>
         </div>
     </section>
 </div>

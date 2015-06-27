@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using NHibernate;
 
@@ -41,7 +42,16 @@ namespace PatientsList.Model
         {
             session = inMemory ? NHibernateInMemory.OpenSession() : NHibernateInMemoryCleanup.OpenSession();
             session.FlushMode = FlushMode.Commit;
-            transaction = session.BeginTransaction();
+            while (true)
+                try
+                {
+                    transaction = session.BeginTransaction();
+                    break;
+                }
+                catch
+                {
+                    Thread.Sleep(500);
+                }
         }
 
         public void Start()
