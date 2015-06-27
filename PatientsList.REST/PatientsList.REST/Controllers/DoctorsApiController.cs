@@ -23,6 +23,7 @@ namespace PatientsList.REST.Controllers
                 {
                     Id = 1,
                     Name = "Anna Zawodna 1",
+                    Duration = TimeSpan.FromSeconds(10),
                     VisitTime = DateTime.Now + TimeSpan.FromSeconds(10)
                 },
 
@@ -30,6 +31,7 @@ namespace PatientsList.REST.Controllers
                 {
                     Id = 2,
                     Name = "Anna Zdrowa 1",
+                    Duration = TimeSpan.FromSeconds(10),
                     VisitTime = DateTime.Now + TimeSpan.FromMinutes(20)
                 },
 
@@ -37,6 +39,7 @@ namespace PatientsList.REST.Controllers
                 {
                     Id = 3,
                     Name = "Henryka Prostonos 1",
+                    Duration = TimeSpan.FromSeconds(10),
                     VisitTime = DateTime.Now + TimeSpan.FromMinutes(30)
                 }
             };
@@ -46,6 +49,7 @@ namespace PatientsList.REST.Controllers
                 {
                     Id = 4,
                     Name = "Anna Zawodna 2",
+                    Duration = TimeSpan.FromSeconds(10),
                     VisitTime = DateTime.Now + TimeSpan.FromSeconds(10)
                 },
 
@@ -53,6 +57,7 @@ namespace PatientsList.REST.Controllers
                 {
                     Id = 5,
                     Name = "Anna Zdrowa 2",
+                    Duration = TimeSpan.FromSeconds(10),
                     VisitTime = DateTime.Now + TimeSpan.FromMinutes(20)
                 },
 
@@ -60,6 +65,7 @@ namespace PatientsList.REST.Controllers
                 {
                     Id = 6,
                     Name = "Henryka Prostonos 2",
+                    Duration = TimeSpan.FromSeconds(10),
                     VisitTime = DateTime.Now + TimeSpan.FromMinutes(30)
                 }
             };
@@ -69,6 +75,7 @@ namespace PatientsList.REST.Controllers
                 {
                     Id = 7,
                     Name = "Anna Zawodna 3",
+                    Duration = TimeSpan.FromSeconds(10),
                     VisitTime = DateTime.Now + TimeSpan.FromSeconds(10)
                 },
 
@@ -76,6 +83,7 @@ namespace PatientsList.REST.Controllers
                 {
                     Id = 8,
                     Name = "Anna Zdrowa 3",
+                    Duration = TimeSpan.FromSeconds(10),
                     VisitTime = DateTime.Now + TimeSpan.FromMinutes(20)
                 },
 
@@ -83,6 +91,7 @@ namespace PatientsList.REST.Controllers
                 {
                     Id = 9,
                     Name = "Henryka Prostonos 3",
+                    Duration = TimeSpan.FromSeconds(10),
                     VisitTime = DateTime.Now + TimeSpan.FromMinutes(30)
                 }
             };

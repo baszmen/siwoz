@@ -42,15 +42,17 @@
             IsItemClickEnabled="True">
             <GridView.ItemTemplate>
                 <DataTemplate>
-                    <Grid HorizontalAlignment="Left" Width="250" Height="250">
-                        <Border Background="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}">
-                            <Image Source="{Binding ImagePath}" Stretch="UniformToFill" AutomationProperties.Name="{Binding Name}"/>
-                        </Border>
-                        <StackPanel VerticalAlignment="Bottom" Background="{ThemeResource ListViewItemOverlayBackgroundThemeBrush}">
-                            <TextBlock Text="{Binding Name}" Foreground="{ThemeResource ListViewItemOverlayForegroundThemeBrush}" Style="{StaticResource TitleTextBlockStyle}" Height="60" Margin="15,0,15,0"/>
+                    <Grid HorizontalAlignment="Left" Width="450" Height="110" Background="{Binding BackgroundBrush}">
+                        <StackPanel VerticalAlignment="Top" Margin="10,0,0,0">
+                            <TextBlock Text="{Binding Name}" Style="{StaticResource TitleTextBlockStyle}"
+                                       FontSize="30" TextWrapping="NoWrap" Margin="10,15"/>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding PatientInfo}"  Foreground="{ThemeResource ListViewItemOverlaySecondaryForegroundThemeBrush}" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="NoWrap" Margin="15,0,15,10"/>
-                                <TextBlock Text="{Binding TimerTime, Converter={StaticResource StringFormatConverter}}" Foreground="{ThemeResource ListViewItemOverlaySecondaryForegroundThemeBrush}" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="NoWrap" Margin="15,0,15,10"/>
+                                <TextBlock Text="{Binding PatientInfo}"  Foreground="{ThemeResource ListViewItemOverlaySecondaryForegroundThemeBrush}" 
+                                           Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="NoWrap"
+                                           FontSize="20"  Margin="10,5"/>
+                                <TextBlock Text="{Binding TimerTime, Converter={StaticResource StringFormatConverter}}" Foreground="{ThemeResource ListViewItemOverlaySecondaryForegroundThemeBrush}" 
+                                           Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="NoWrap"
+                                           FontSize="20" Margin="10,5"/>
                             </StackPanel>
                         </StackPanel>
                     </Grid>

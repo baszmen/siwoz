@@ -5,8 +5,10 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
+using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Media;
 using PatientsList.Annotations;
 
 namespace PatientsList.DataModel
@@ -34,16 +36,18 @@ namespace PatientsList.DataModel
                             TimerTime = TimeSpan.Zero;
                             Inside = true;
                             ImagePath = "Assets/doctor.jpeg";
-                            TimerTime = Duration;
                         }
                         else TimerTime = ts;
                     }
 
                     if (Inside)
                     {
-                        TimerTime = TimerTime.Subtract(TimeSpan.FromMilliseconds(TIME_INTERVAL_IN_MILLISECONDS));
-                        if (TimerTime.Ticks <= 0)
-                            return;
+                        TimerTime = TimerTime.Add(TimeSpan.FromMilliseconds(TIME_INTERVAL_IN_MILLISECONDS));
+                        if (TimerTime.Ticks >= Duration.Ticks)
+                        {
+                            PatientInfo = "Wizyta się przedłuża";
+                            BackgroundBrush = new SolidColorBrush(Colors.Orange);
+                        }
                     }
                     _timer.Change(TIME_INTERVAL_IN_MILLISECONDS, Timeout.Infinite);
                 });
@@ -57,7 +61,17 @@ namespace PatientsList.DataModel
         private TimeSpan _timerTime;
         private TimeSpan _duration = TimeSpan.FromSeconds(10);
         private string _imagePath = "Assets/person.jpg";
+        private SolidColorBrush _backgroundBrush = new SolidColorBrush(Colors.Red);
 
+        public SolidColorBrush BackgroundBrush
+        {
+            get { return _backgroundBrush; }
+            set
+            {
+                _backgroundBrush = value;
+                OnPropertyChanged("BackgroundBrush");
+            }
+        }
         public bool Inside
         {
             get { return _inside; }
@@ -65,6 +79,7 @@ namespace PatientsList.DataModel
             {
                 _inside = value;
                 PatientInfo = "Trwa wizyta. Pozostało:";
+                BackgroundBrush = new SolidColorBrush(Colors.Green);
                 OnPropertyChanged("Inside");
             }
         }

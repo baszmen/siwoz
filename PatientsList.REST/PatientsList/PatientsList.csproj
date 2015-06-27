@@ -126,6 +126,7 @@
     <Compile Include="Common\ObservableDictionary.cs" />
     <Compile Include="Utils\DataTemplateSelector.cs" />
     <Compile Include="Utils\PatientsSelector.cs" />
+    <Compile Include="Utils\PatientToBackgroundConverter.cs" />
     <Compile Include="Utils\StringFormatConverter.cs" />
   </ItemGroup>
   <ItemGroup>
