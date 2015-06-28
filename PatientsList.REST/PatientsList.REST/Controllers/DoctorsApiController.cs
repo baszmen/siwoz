@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using PatientsList.Model;
 using PatientsList.Model.Entities;
 using PatientsList.Model.Repository;
+using PatientsList.REST.Models;
 using Doctor = PatientsList.Model.Entities.Doctor;
 
 namespace PatientsList.REST.Controllers
@@ -17,7 +18,7 @@ namespace PatientsList.REST.Controllers
         // GET api/doctors
         public List<Doctor> Get()
         {
-            var patients_1 = new List<Patient>
+            /*var patients_1 = new List<Patient>
             {
                 new Patient
                 {
@@ -32,7 +33,7 @@ namespace PatientsList.REST.Controllers
                     Id = 2,
                     Name = "Anna Zdrowa 1",
                     Duration = TimeSpan.FromSeconds(10),
-                    VisitTime = DateTime.Now + TimeSpan.FromMinutes(20)
+                    VisitTime = DateTime.Now + TimeSpan.FromSeconds(40)
                 },
 
                 new Patient
@@ -105,28 +106,29 @@ namespace PatientsList.REST.Controllers
                     Surname = "Góralczyk",
                     Titles = "dr hab."
                 },
-                new Doctor
-                {
-                    Id = 2,
-                    Name = "Paweł",
-                    PatientsList = patients_2,
-                    Surname = "Niskowłos",
-                    Titles = "prof. dr hab."
-                },
-                new Doctor
-                {
-                    Id = 3,
-                    Name = "Hieronim",
-                    PatientsList = patients_3,
-                    Surname = "Anonim",
-                    Titles = "prof. zw. dr hab"
-                }
+                //new Doctor
+                //{
+                //    Id = 2,
+                //    Name = "Paweł",
+                //    PatientsList = patients_2,
+                //    Surname = "Niskowłos",
+                //    Titles = "prof. dr hab."
+                //},
+                //new Doctor
+                //{
+                //    Id = 3,
+                //    Name = "Hieronim",
+                //    PatientsList = patients_3,
+                //    Surname = "Anonim",
+                //    Titles = "prof. zw. dr hab"
+                //}
             };
 
-            return docs;
+            return docs;*/
 
-            using (var uow = new UnitOfWork())
-                return new Repository<Doctor>(uow).Query().ToList();
+            var uow = UnitOfWorkPerRequest.Get();
+            var repo = new Repository<Doctor>(uow);
+            return new List<Doctor>(repo.Query());
         }
 
         // GET api/doctors/5

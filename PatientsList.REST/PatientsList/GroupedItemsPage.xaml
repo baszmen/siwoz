@@ -31,6 +31,38 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
+        <!--<ItemsControl ItemsSource="{Binding Doctors}" Grid.Row="1">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid Width="450">
+                        <ListBox ItemsSource="{Binding PatientsList}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel VerticalAlignment="Top" Margin="10,0,0,0">
+                                        <TextBlock Text="{Binding Name}" Style="{StaticResource TitleTextBlockStyle}"
+                                       FontSize="30" TextWrapping="NoWrap" Margin="10,15"/>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding PatientInfo}"  Foreground="{ThemeResource ListViewItemOverlaySecondaryForegroundThemeBrush}" 
+                                           Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="NoWrap"
+                                           FontSize="20"  Margin="10,5"/>
+                                            <TextBlock Text="{Binding TimerTime, Converter={StaticResource StringFormatConverter}}" Foreground="{ThemeResource ListViewItemOverlaySecondaryForegroundThemeBrush}" 
+                                           Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="NoWrap"
+                                           FontSize="20" Margin="10,5"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>-->
+
         <GridView
             AutomationProperties.AutomationId="ItemGridView"
             AutomationProperties.Name="Grouped Items"
@@ -38,8 +70,7 @@
             Padding="116,137,40,46"
             ItemsSource="{Binding Source={StaticResource groupedItemsViewSource}}"
             SelectionMode="None"
-            IsSwipeEnabled="false"
-            IsItemClickEnabled="True">
+            IsSwipeEnabled="false">
             <GridView.ItemTemplate>
                 <DataTemplate>
                     <Grid HorizontalAlignment="Left" Width="450" Height="110" Background="{Binding BackgroundBrush}">

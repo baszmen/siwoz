@@ -28,28 +28,39 @@ namespace PatientsList.DataModel
             Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                 () =>
                 {
-                    if (!Inside)
+                    if (TimeStuck != null)
                     {
-                        var ts = VisitTime.Subtract(DateTime.Now);
-                        if (ts.Ticks <= 0)
+                        var offset = TimeStuck(this);
+                        if (!(VisitTime.Subtract(DateTime.Now) <= offset) || offset == TimeSpan.Zero)
                         {
-                            TimerTime = TimeSpan.Zero;
-                            Inside = true;
-                            ImagePath = "Assets/doctor.jpeg";
-                        }
-                        else TimerTime = ts;
-                    }
+                            if (!Inside)
+                            {
+                                var ts = VisitTime.Subtract(DateTime.Now);
+                                if (ts.Ticks <= 0)
+                                {
+                                    TimerTime = DateTime.Now.Subtract(VisitTime);
+                                    Inside = true;
+                                    ImagePath = "Assets/doctor.jpeg";
+                                }
+                                else TimerTime = ts;
+                            }
 
-                    if (Inside)
-                    {
-                        TimerTime = TimerTime.Add(TimeSpan.FromMilliseconds(TIME_INTERVAL_IN_MILLISECONDS));
-                        if (TimerTime.Ticks >= Duration.Ticks)
-                        {
-                            PatientInfo = "Wizyta się przedłuża";
-                            BackgroundBrush = new SolidColorBrush(Colors.Orange);
+                            if (Inside)
+                            {
+                                TimerTime = TimerTime.Add(TimeSpan.FromMilliseconds(TIME_INTERVAL_IN_MILLISECONDS));
+                                if (TimerTime.Ticks >= Duration.Ticks)
+                                {
+                                    PatientInfo = "Wizyta się przedłuża";
+                                    BackgroundBrush = new SolidColorBrush(Colors.Orange);
+                                }
+                            }
                         }
+                        else
+                        {
+                            TimerTime = offset;
+                        }
+                        _timer.Change(TIME_INTERVAL_IN_MILLISECONDS, Timeout.Infinite);
                     }
-                    _timer.Change(TIME_INTERVAL_IN_MILLISECONDS, Timeout.Infinite);
                 });
         }
 
@@ -62,6 +73,13 @@ namespace PatientsList.DataModel
         private TimeSpan _duration = TimeSpan.FromSeconds(10);
         private string _imagePath = "Assets/person.jpg";
         private SolidColorBrush _backgroundBrush = new SolidColorBrush(Colors.Red);
+        private Func<Patient, TimeSpan> _timeStuck;
+
+        public Func<Patient, TimeSpan> TimeStuck
+        {
+            get { return _timeStuck; }
+            set { _timeStuck = value; }
+        }
 
         public SolidColorBrush BackgroundBrush
         {

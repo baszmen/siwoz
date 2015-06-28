@@ -87,16 +87,16 @@ namespace PatientsList.Model
                 Name = "Adam",
                 Surname = "Badam",
                 Titles = "Doktor Rehabilitowany",
-                Photo =
-                    File.ReadAllBytes(@"C:\Users\AdminSecPL\git\siwoz\PatientsList.REST\PatientsList\Assets\person.jpg")
+                //Photo =
+                //    File.ReadAllBytes(new Uri()) @"C:\Users\AdminSecPL\git\siwoz\PatientsList.REST\PatientsList\Assets\person.jpg")
             });
             session.Save(new Doctor
             {
                 Name = "Jan",
                 Surname = "Pan",
                 Titles = "Arcyherold",
-                Photo =
-                    File.ReadAllBytes(@"C:\Users\AdminSecPL\git\siwoz\PatientsList.REST\PatientsList\Assets\doctor.jpeg")
+                //Photo =
+                //    File.ReadAllBytes(@"C:\Users\AdminSecPL\git\siwoz\PatientsList.REST\PatientsList\Assets\doctor.jpeg")
             });
             trans.Commit();
             session.Close();

@@ -15,86 +15,98 @@ namespace PatientsList.DataModel
 {
     public static class DoctorsDataSource
     {
-        private static string _token = "1";
-        private static ObservableCollection<Doctor> _doctors;
+        public static ObservableCollection<Doctor> _doctors;
 
         public static Doctor GetDoctor(int id)
         {
             return _doctors.FirstOrDefault(x => x.Id == id);
         }
 
-        public async static Task<bool> ActualizeDoctors()
+        public async static Task<ObservableCollection<Doctor>> ActualizeDoctors()
         {
             try
             {
                 var _docs = new List<Doctor>();
-                var client = new HttpClient {BaseAddress = new Uri("http://localhost:59901/")};
+                var client = new HttpClient { BaseAddress = new Uri("http://localhost:59901/") };
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
                 var responseMsg = client.GetAsync("api/Doctors");
                 var resp = responseMsg.Result;
                 if (!resp.IsSuccessStatusCode) _docs = new List<Doctor>();
                 var jsonText = await resp.Content.ReadAsStringAsync();
                 _docs = JsonConvert.DeserializeObject<List<Doctor>>(jsonText);
-                Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(
-                    CoreDispatcherPriority.Normal,
-                    () =>
-                    {
-                        foreach (var d in _docs)
-                        {
-                            var doc = _doctors.FirstOrDefault(x => x.Id == d.Id);
-                            if (doc == null)
-                            {
-                                _doctors.Add(d);
-                                continue;
-                            }
-                            doc.Name = d.Name;
-                            doc.Surname = d.Surname;
-                            doc.Titles = d.Titles;
-                            doc.PatientsList = new ObservableCollection<Patient>();
-                            foreach (var p in d.PatientsList)
-                            {
-                                doc.PatientsList.Add(p);
-                                //var pat = doc.PatientsList.FirstOrDefault(x => x.Id == p.Id);
-                                //if (pat == null)
-                                //    doc.PatientsList.Add(p);
-                                //else
-                                //{
-                                //    pat.VisitTime = p.VisitTime;
-                                //    pat.Name = p.Name;
-                                //}
-                            }
 
-                            //var toRemovePatients = doc.PatientsList.Where(x => _docs.All(y => y.Id != x.Id)).ToList();
-                            //foreach (var tr in toRemovePatients)
-                            //    doc.PatientsList.Remove(tr);
+                foreach (var d in _docs)
+                {
+                    var doctor = _doctors.FirstOrDefault(x => x.Id == d.Id);
+                    if (doctor == null)
+                    {
+                        _doctors.Add(d);
+                        foreach (var p in d.PatientsList)
+                            p.TimeStuck = d.TimeStuck;
+                        continue;
+                    }
+
+                    foreach (var p in d.PatientsList)
+                    {
+                        var patient = doctor.PatientsList.FirstOrDefault(x => x.Id == p.Id);
+
+                        //dodawanie
+                        if (patient == null)
+                        {
+                            p.TimeStuck = doctor.TimeStuck;
+                            doctor.PatientsList.Add(p);
+                            continue;
                         }
-                        //var toRemove = _doctors.Where(d => _docs.All(x => x.Id != d.Id)).ToList();
-                        //foreach (var tr in toRemove)
-                        //    _doctors.Remove(tr);
-                    });
+                        // edycja
+                        if (patient.VisitTime != p.VisitTime || patient.Duration != p.Duration)
+                        {
+                            patient.Duration = p.Duration;
+                            patient.VisitTime = p.VisitTime;
+                            patient.TimeStuck = doctor.TimeStuck;
+                            patient.Inside = false;
+                        }
+                    }
+
+                    // usuwanie
+                    foreach (var p in doctor.PatientsList)
+                    {
+                        var patient = d.PatientsList.FirstOrDefault(x => x.Id == p.Id);
+                        if (patient == null)
+                        {
+                            p.TimeStuck = null;
+                            doctor.PatientsList.Remove(p);
+                        }
+
+                    }
+                }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                return false;
+                return _doctors;
             }
-            return true;
+            return _doctors;
         }
 
         public async static Task<ObservableCollection<Doctor>> GetDoctors()
         {
-            if (_doctors != null) return _doctors;
             await DoctorsFromREST();
+            if (_doctors != null)
+                foreach (var t in _doctors)
+                    foreach (var pat in t.PatientsList)
+                        pat.TimeStuck = t.TimeStuck;
             return _doctors;
         }
 
         private static async Task DoctorsFromREST()
         {
-            var client = new HttpClient {BaseAddress = new Uri("http://localhost:59901/")};
+            var client = new HttpClient { BaseAddress = new Uri("http://localhost:59901/") };
             client.DefaultRequestHeaders.Add("Accept", "application/json");
             var responseMsg = client.GetAsync("api/Doctors");
             var resp = responseMsg.Result;
             if (!resp.IsSuccessStatusCode) _doctors = new ObservableCollection<Doctor>();
             var jsonText = await resp.Content.ReadAsStringAsync();
+            if (_doctors != null)
+                _doctors.Clear();
             _doctors = JsonConvert.DeserializeObject<ObservableCollection<Doctor>>(jsonText);
         }
     }

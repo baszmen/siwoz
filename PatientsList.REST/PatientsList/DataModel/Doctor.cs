@@ -19,6 +19,19 @@ namespace PatientsList.DataModel
         private string _surname;
         private ObservableCollection<Patient> _patientsList;
 
+        public TimeSpan TimeStuck(Patient patient)
+        {
+            var p = PatientsList.FirstOrDefault(x => x.Id == patient.Id);
+            var index = PatientsList.IndexOf(p);
+            if (index == -1) return TimeSpan.Zero;
+            if (index == 0) return TimeSpan.Zero;
+
+            TimeSpan duration;
+            for (var i = 0; i < index; i++)
+                duration += PatientsList[i].Duration;
+
+            return duration; //patient.VisitTime.Subtract(DateTime.Now) <= duration;
+        }
         public string Name
         {
             get { return _name; }

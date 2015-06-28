@@ -10,6 +10,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -28,8 +29,6 @@ namespace PatientsList
     /// </summary>
     sealed partial class App : Application
     {
-        private const int TIME_INTERVAL_IN_MILLISECONDS = 2000;
-        private Timer _timer;
         /// <summary>
         /// Initializes the singleton Application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -100,18 +99,7 @@ namespace PatientsList
             // Ensure the current window is active
             Window.Current.Activate();
 
-            if (_timer != null)
-            {
-                _timer.Dispose();
-                _timer = null;
-            }
-            _timer = new Timer(AsynchronousRESTActualization, null, TIME_INTERVAL_IN_MILLISECONDS, Timeout.Infinite);
-        }
-
-        private async void AsynchronousRESTActualization(object state)
-        {
-            //  await DoctorsDataSource.ActualizeDoctors();
-           // _timer.Change(TIME_INTERVAL_IN_MILLISECONDS, Timeout.Infinite);
+            
         }
 
         /// <summary>
