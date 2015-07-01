@@ -10,14 +10,19 @@
     d.setHours(d.getHours() + 3);
     d.setMinutes(0);
     var dStr = d.toISOString().slice(0, 16).replace("T", " ");
-    $('.datetimepicker').datetimepicker({
+    $('.datetimepicker').not('.date').datetimepicker({
         lang: 'pl',
-        //inline: true,
         timepicker: true,
         step: 15,
-        defaultTime: d.toISOString().slice(11, 16),
+        defaultTime: d.toISOString().slice(11, 16)
+    });
+    $('.datetimepicker.date').datetimepicker({
+        lang: 'pl',
+        timepicker: false,
+        format: 'Y-m-d',
         onChangeDateTime: function (dp, $input) {
-            $input.val(); // lol xD
+            if ($input.val() != "")
+                window.location = window.location.href.split('?')[0] + "?visitsDate=" + $input.val();
         }
     });
     $(".datetimepicker[value='']").val(dStr);

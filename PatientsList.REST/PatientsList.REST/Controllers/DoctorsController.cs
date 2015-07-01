@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Web;
 using System.Web.Helpers;
 using System.Web.Mvc;
@@ -47,6 +48,7 @@ namespace PatientsList.REST.Controllers
             if (doctor == null)
                 throw new HttpException(404, "Brak doktora z podanym id."); 
             var patients = new List<Patient>(doctor.PatientsList.Where(x => x.VisitTime.Date == date.Date));
+            patients.Sort((x, y) => x.VisitTime.CompareTo(y.VisitTime));
             ViewBag.Doctor = doctor;
             ViewBag.Date = date;
             return View(patients);

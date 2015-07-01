@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = "Szczegóły";
     Layout = "../Shared/_Layout.cshtml";
+    ViewBag.ButtonFinished = false;
 }
 
 <div id="body">
@@ -11,7 +12,7 @@
 
         <h3>@ViewBag.Doctor.Titles @ViewBag.Doctor.Name @ViewBag.Doctor.Surname</h3>
 
-        <h3>Zaplanowane wizyty na dzień @ViewBag.Date.ToShortDateString():</h3>
+        <h3>Zaplanowane wizyty na dzień <input class="datetimepicker date change-get" type="text" value="@ViewBag.Date.ToShortDateString()" /></h3>
         @*<ol class="round">
                 @foreach (Patient patient in Model)
                 {
@@ -59,7 +60,11 @@
                                 @item.Duration
                             </td>
                             <td>
-                                <!-- TODO: przycisk przyjmij wizytanta -->
+                                @if (item.IsEnded == false && ViewBag.ButtonFinished == false)
+                                {
+                                    ViewBag.ButtonFinished = true;
+                                    @Html.ActionLink("Zakończ wizytę", "Finish", "Visits", new { doctorId = ViewBag.Doctor.Id, visitId = item.Id}, null)
+                                }
                             </td>
                             <td>
                                 @if (item.IsEnded == false)

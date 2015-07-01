@@ -132,5 +132,26 @@ namespace PatientsList.REST.Controllers
                 return RedirectToAction("Details", "Doctors", new { id = doctorId });
             }
         }
+
+        public ActionResult Finish(int doctorId, int visitId)
+        {
+            try
+            {
+                var uow = UnitOfWorkPerRequest.Get();
+                var visitRepo = new Repository<Patient>(uow);
+                var visit = visitRepo.Get(visitId);
+                if (visit != null)
+                {
+                    visit.IsEnded = true;
+                    uow.Commit();
+                    return RedirectToAction("Details", "Doctors", new { id = doctorId, visitDate = visit.VisitTime.Date});
+                }
+                return RedirectToAction("Details", "Doctors", new { id = doctorId });
+            }
+            catch
+            {
+                return RedirectToAction("Details", "Doctors", new { id = doctorId });
+            }
+        }
     }
 }
